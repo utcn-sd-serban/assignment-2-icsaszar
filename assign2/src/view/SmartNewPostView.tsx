@@ -4,26 +4,36 @@ import {doNewPost} from "../model/question/actions";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {NewPostView} from "./NewPostView";
+import Tag from "../model/objects/Tag";
+import {AppState} from "../model/Model";
+import {doNewTag} from "../model/tag/actions";
+import {spread} from "q";
 
 
 interface Props {
-    onCreate: (title: string, text: string) => void
+    onCreate: (title: string, text: string, tags: Tag[]) => void;
+    onAddTag: (name: string) => void;
+    tags: Tag[]
 }
 
 interface State {
     title: string;
     text: string;
     canSubmit: boolean;
+    selectedTags: string[];
+    currentTag: string;
 }
 
 class SmartNewPostView extends Component<Props, State>{
     state: State = {
         title: "",
         text: "",
-        canSubmit: false
+        canSubmit: false,
+        selectedTags: [],
+        currentTag: this.props.tags[0].name
     };
 
-    handleOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
         let newState = {
             ...this.state,
@@ -35,8 +45,46 @@ class SmartNewPostView extends Component<Props, State>{
         });
     };
 
-    handleOnCreate = () => {
-        this.props.onCreate(this.state.title.trim(), this.state.text.trim())
+    resetState = () => {
+      this.setState({
+          ...this.state,
+          selectedTags: [],
+          title: "",
+          text: "",
+          currentTag: this.props.tags[0].name
+      })
+    };
+
+    handleCreatePost = () => {
+        let tags: Tag[] = [];
+        this.state.selectedTags.forEach( selectedTagName =>{
+            const foundTag = this.props.tags.find(tag => tag.name == selectedTagName);
+            if(foundTag !== undefined)
+                tags = [...tags, foundTag]
+        });
+        this.props.onCreate(this.state.title.trim(), this.state.text.trim(), tags);
+        this.resetState();
+    };
+
+    handleNewTag = () => {
+
+    };
+
+    handleAddTag = () =>{
+        if(this.state.currentTag !== undefined)
+            if(!this.state.selectedTags.includes(this.state.currentTag))
+                this.setState({
+                    ...this.state,
+                    selectedTags: [...this.state.selectedTags, this.state.currentTag]
+                })
+    };
+
+    handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) =>{
+        debugger;
+        this.setState({
+            ...this.state,
+            currentTag: e.target.value
+        })
     };
 
     render(){
@@ -44,18 +92,31 @@ class SmartNewPostView extends Component<Props, State>{
             <NewPostView
                 text={this.state.text}
                 title={this.state.title}
-                onChange={this.handleOnChange}
-                onClick={this.handleOnCreate}
-                buttonDisabled={!this.state.canSubmit}/>
+                onChangeInput={this.handleInputChange}
+                onSubmit={this.handleCreatePost}
+                buttonDisabled={!this.state.canSubmit}
+                tags={this.props.tags}
+                onAddTag={this.handleAddTag}
+                currentTag={this.state.currentTag}
+                onChangeTag={this.handleTagChange}
+            />
         );
     }
 }
 
 function mapDispatchToPros(dispatch: Dispatch) {
     return {
-        onCreate: (title: string, text: string) =>
-            dispatch(doNewPost(title, text, new User("TEST")))
+        onCreate: (title: string, text: string, tags: Tag[]) =>
+            dispatch(doNewPost(title, text, new User("TEST"), tags)),
+        onAddTag: (name: string) =>
+            dispatch(doNewTag(name))
     }
 }
 
-export default connect(null, mapDispatchToPros)(SmartNewPostView);
+function mapStateToProps(state: AppState) {
+    return {
+        tags: state.tagState.tags
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToPros)(SmartNewPostView);

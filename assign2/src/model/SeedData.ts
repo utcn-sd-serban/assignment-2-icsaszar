@@ -29,12 +29,12 @@ export const questions: Question[] = [
         "Pls help",
         "Help my program keeps crashing",
         users[0],
-        1,
-        tags.slice(3,4)),
+        tags.slice(3,4),
+        1),
     new Question(
         "How do i do A?",
         "Can someone please explain me how to do A?",
         users[1],
-        2,
-        tags.slice(0,2))
+        tags.slice(0,2),
+        2)
 ];

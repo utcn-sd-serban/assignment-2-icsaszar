@@ -17,7 +17,8 @@ export function questionReducer(state: QuestionsState = initialState, action: Qu
                         new Question(
                             action.newPost.title,
                             action.newPost.text,
-                            action.newPost.author
+                            action.newPost.author,
+                            action.newPost.tags
                         )
                     ]
             };

@@ -12,8 +12,8 @@ class Question extends Post{
         title: string = "",
         text: string = "",
         author: User = new User(),
-        id: number = 0,
         tags: Tag[] = [],
+        id: number = 0,
         posted: Date = new Date(),
         answers: Answer[] = [])
     {
