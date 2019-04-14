@@ -1,7 +1,7 @@
-import User from "./User";
-import Question from "./Question";
-import Answer from "./Answer";
-import Tag from "./Tag";
+import User from "./objects/User";
+import Question from "./objects/Question";
+import Answer from "./objects/Answer";
+import Tag from "./objects/Tag";
 import {combineReducers, createStore} from "redux";
 import {questionReducer} from "./question/reducers";
 import {userReducer} from "./user/reducers";

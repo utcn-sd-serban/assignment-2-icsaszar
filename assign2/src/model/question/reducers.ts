@@ -1,6 +1,6 @@
 import {FILTER_BY_TAG, NEW_POST, QuestionActions, QuestionsState, SEARCH_BY_TITLE} from "./types";
-import Question from "../Question";
-import * as Data from '../TestingData'
+import Question from "../objects/Question";
+import * as Data from '../SeedData'
 
 const initialState: QuestionsState = {
     questions: Data.questions,

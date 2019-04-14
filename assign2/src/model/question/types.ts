@@ -1,6 +1,6 @@
-import User from "../User";
-import Tag from "../Tag";
-import Question from "../Question";
+import User from "../objects/User";
+import Tag from "../objects/Tag";
+import Question from "../objects/Question";
 
 export const NEW_POST = 'NEW_POST';
 export const FILTER_BY_TAG = 'FILTER_BY_TAG';

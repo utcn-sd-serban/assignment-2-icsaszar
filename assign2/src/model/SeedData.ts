@@ -1,5 +1,5 @@
-import User from "./User";
-import Question from "./Question";
+import User from "./objects/User";
+import Question from "./objects/Question";
 
 export const users: User[] = [
     {

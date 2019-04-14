@@ -1,4 +1,4 @@
-import User from "../User";
+import User from "../objects/User";
 
 export const LOGIN_USER = 'LOGIN_USER';
 
