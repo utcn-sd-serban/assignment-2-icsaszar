@@ -1,4 +1,4 @@
-import Question from '../model/objects/Question'
+import Question from '../../model/objects/Question'
 import React from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';

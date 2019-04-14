@@ -1,6 +1,6 @@
 import Container from "react-bootstrap/Container";
 import React, {ChangeEventHandler} from 'react';
-import Tag from "../model/objects/Tag";
+import Tag from "../../model/objects/Tag";
 
 export function NewPostView(
     {

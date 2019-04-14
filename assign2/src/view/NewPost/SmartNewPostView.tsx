@@ -1,18 +1,17 @@
 import React, {Component} from "react";
-import User from "../model/objects/User";
-import {doNewPost} from "../model/question/actions";
+import User from "../../model/objects/User";
+import {doNewPost} from "../../model/question/actions";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {NewPostView} from "./NewPostView";
-import Tag from "../model/objects/Tag";
-import {AppState} from "../model/Model";
-import {doNewTag} from "../model/tag/actions";
-import {spread} from "q";
+import Tag from "../../model/objects/Tag";
+import {AppState} from "../../model/Model";
+import {doNewTag} from "../../model/tag/actions";
 
 
 interface Props {
     onCreate: (title: string, text: string, tags: Tag[]) => void;
-    onAddTag: (name: string) => void;
+    onNewTag: (name: string) => void;
     tags: Tag[]
 }
 
@@ -80,7 +79,7 @@ class SmartNewPostView extends Component<Props, State>{
     };
 
     handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) =>{
-        debugger;
+        e.preventDefault();
         this.setState({
             ...this.state,
             currentTag: e.target.value
@@ -108,7 +107,7 @@ function mapDispatchToPros(dispatch: Dispatch) {
     return {
         onCreate: (title: string, text: string, tags: Tag[]) =>
             dispatch(doNewPost(title, text, new User("TEST"), tags)),
-        onAddTag: (name: string) =>
+        onNewTag: (name: string) =>
             dispatch(doNewTag(name))
     }
 }

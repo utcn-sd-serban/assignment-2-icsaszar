@@ -9,11 +9,11 @@ export const users: User[] = [
     },
     {
         id: 2,
-        name: "User2"
+        name: "bork2121"
     },
     {
         id: 3,
-        name: "User3"
+        name: "thedudehimself"
     }
 ];
 
@@ -32,7 +32,7 @@ export const questions: Question[] = [
         tags.slice(3,4),
         1),
     new Question(
-        "How do i do A?",
+        "How do I A?",
         "Can someone please explain me how to do A?",
         users[1],
         tags.slice(0,2),

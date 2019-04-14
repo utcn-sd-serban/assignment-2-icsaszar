@@ -1,4 +1,4 @@
-import {ALL_POSTS, FilterActions, FilterState, SET_FILTER} from "./types";
+import {ALL_POSTS, FilterActions, FilterState, SET_FILTER, SET_SEARCHED_TAG, SET_SEARCHED_TITLE} from "./types";
 import Tag from "../objects/Tag";
 
 const initialState: FilterState = {
@@ -14,6 +14,16 @@ export function filterReducer(state: FilterState = initialState, action: FilterA
             return {
                 ...state,
                 currentFilter: action.filter
+            };
+        case SET_SEARCHED_TITLE:
+            return {
+                ...state,
+              searchedTitle: action.searchedTitle
+            };
+        case SET_SEARCHED_TAG:
+            return {
+              ...state,
+              searchedTag: action.searchedTag
             };
         default:
             return  state;

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import {Header} from "./view/Header";
-import SmartNewPostView from "./view/SmartNewPostView";
-import SmartQuestionListView from "./view/SmartQuestionListView";
+import SmartNewPostView from "./view/NewPost/SmartNewPostView";
+import SmartQuestionListView from "./view/QuestionList/SmartQuestionListView";
+import SmartFilterView from "./view/Filter/SmartFilterView";
 
 class App extends Component {
   render() {
@@ -10,6 +11,7 @@ class App extends Component {
         <div>
           <Header/>
           <hr/>
+          <SmartFilterView/>
           <SmartNewPostView/>
           <SmartQuestionListView/>
         </div>
