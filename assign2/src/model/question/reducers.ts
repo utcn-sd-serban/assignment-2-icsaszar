@@ -1,11 +1,9 @@
-import {FILTER_BY_TAG, NEW_POST, QuestionActions, QuestionsState, SEARCH_BY_TITLE} from "./types";
+import {NEW_POST, QuestionActions, QuestionsState} from "./types";
 import Question from "../objects/Question";
 import * as Data from '../SeedData'
 
 const initialState: QuestionsState = {
-    questions: Data.questions,
-    searchedTitle: "",
-    selectedTag: undefined
+    questions: Data.questions
 };
 
 export function questionReducer(state: QuestionsState = initialState, action: QuestionActions): QuestionsState{
@@ -22,16 +20,6 @@ export function questionReducer(state: QuestionsState = initialState, action: Qu
                             action.newPost.author
                         )
                     ]
-            };
-        case SEARCH_BY_TITLE:
-            return {
-                ...state,
-                searchedTitle: action.searchedText
-            };
-        case FILTER_BY_TAG:
-            return {
-                ...state,
-                selectedTag: action.tag
             };
         default:
             return state;

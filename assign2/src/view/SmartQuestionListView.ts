@@ -1,12 +1,12 @@
-import {QuestionsState} from "../model/question/types";
 import {connect} from "react-redux";
-import QuestionListView from "./QuestionListVIew";
+import QuestionListView from "./QuestionListView";
 import {AppState} from "../model/Model";
+import {getFilteredQuestions} from "../model/question/selectors";
 
 
 function mapStateToProps(state: AppState) {
     return {
-        questions: state.questionState.questions
+        questions: getFilteredQuestions(state)
     }
 }
 

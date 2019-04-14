@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import QuestionListView from './view/QuestionListVIew';
 import * as serviceWorker from './serviceWorker';
 import {store} from "./model/Model";
 import App from "./App";

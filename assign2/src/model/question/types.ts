@@ -1,5 +1,4 @@
 import User from "../objects/User";
-import Tag from "../objects/Tag";
 import Question from "../objects/Question";
 
 export const NEW_POST = 'NEW_POST';
@@ -7,9 +6,7 @@ export const FILTER_BY_TAG = 'FILTER_BY_TAG';
 export const SEARCH_BY_TITLE = 'SEARCH_BY_TITLE';
 
 export interface QuestionsState{
-    questions: Question[],
-    searchedTitle: string,
-    selectedTag?: Tag
+    questions: Question[]
 }
 
 interface NewPostAction{
@@ -21,14 +18,4 @@ interface NewPostAction{
     }
 }
 
-interface FilterByTagAction{
-    type: typeof FILTER_BY_TAG,
-    tag: Tag
-}
-
-interface SearchByTitleAction{
-    type: typeof SEARCH_BY_TITLE
-    searchedText: string
-}
-
-export type QuestionActions = NewPostAction | FilterByTagAction | SearchByTitleAction;
+export type QuestionActions = NewPostAction;
