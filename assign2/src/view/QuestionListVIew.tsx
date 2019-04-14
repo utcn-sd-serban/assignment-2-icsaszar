@@ -1,24 +1,31 @@
-import Question from '../model/Question'
-import {QuestionsState} from "../model/question/types";
+import Question from '../model/objects/Question'
 import React from 'react';
-import {Row, Col, Container} from 'react-bootstrap';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 
 
-function QuestionView({question}: { question: Question }) {
+function QuestionView({question}: {question: Question}) {
+    const {title, text, author, posted} = question;
     return (
-            <Row>
-                <Col> {question.title} </Col>
-                <Col> {question.text} </Col>
-                <Col> {question.author.name} </Col>
-                <Col> {question.posted.toDateString()} </Col>
-            </Row>
+            <Container>
+                <Row>
+                    <Col> {title} </Col>
+                </Row>
+                <Row>
+                    <Col> {text} </Col>
+                </Row>
+                <Row>
+                    <Col> {author.name} </Col>
+                    <Col> {posted.toDateString()} </Col>
+                </Row>
+            </Container>
     )
 }
 
-export default function QuestionListView({state}: {state: QuestionsState}) {
-    const {questions, searchedTitle, selectedTag } = state;
+export default function QuestionListView({questions}: {questions: Question[]}) {
     return (
-        <Container fluid={true}>
+        <Container>
             {
                 questions.map(question =>
                 <QuestionView question={question} key={question.id}/>)

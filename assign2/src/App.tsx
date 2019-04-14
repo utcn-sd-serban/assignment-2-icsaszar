@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import {store} from "./model/Model";
-import QuestionListView from "./view/QuestionListVIew";
+import {Header} from "./view/Header";
+import SmartNewPostView from "./view/SmartNewPostView";
+import SmartQuestionListView from "./view/SmartQuestionListView";
 
 class App extends Component {
   render() {
     return (
-        <QuestionListView state={store.getState().questionState}/>
+        <div>
+          <Header/>
+          <hr/>
+          <SmartNewPostView/>
+          <SmartQuestionListView/>
+        </div>
     );
   }
 }
