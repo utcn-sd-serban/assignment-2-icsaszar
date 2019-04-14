@@ -3,7 +3,7 @@ import User from "../User";
 import * as Data from '../TestingData'
 
 const initialState: UsersState = {
-    currentUser: undefined,
+    currentUser: Data.users[0],
     users: Data.users
 };
 

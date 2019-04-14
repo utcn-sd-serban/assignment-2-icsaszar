@@ -21,3 +21,10 @@ const tags: Tag[] = [
     new Tag("pythonscript", 3),
     new Tag("general", 4)
 ];
+
+function mapStateToProps(state: AppState){
+    return {
+        questionState: state.questionState,
+        userState: state.userState
+    }
+}
