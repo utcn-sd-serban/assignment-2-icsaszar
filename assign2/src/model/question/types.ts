@@ -5,21 +5,21 @@ import Tag from "../objects/Tag";
 export const NEW_POST = "NEW_POST";
 export const SET_NEW_POST_TITLE = "SET_NEW_POST_TITLE";
 export const SET_NEW_POST_TEXT = "SET_NEW_POST_TEXT";
+export const SET_CURRENT_TAG = "SET_CURRENT_TAG";
+export const ADD_TAG_TO_SELECTED_TAGS = "ADD_TAG_TO_SELECTED_TAGS";
+export const CLEAR_NEW_POST_DATA = "CLEAR_NEW_POST_DATA";
 
 export interface QuestionsState{
     questions: Question[];
     newTitle: string;
     newText: string;
+    currentTag: Tag;
+    selectedTags: Tag[];
 }
 
 interface NewPostAction{
     type: typeof NEW_POST,
-    newPost: {
-        title: string,
-        text: string,
-        author: User,
-        tags: Tag[]
-    }
+    postAuthor: User
 }
 
 interface SetNewTitleAction {
@@ -32,4 +32,22 @@ interface SetNewTextAction {
     newText: string
 }
 
-export type QuestionActions = NewPostAction | SetNewTextAction | SetNewTitleAction;
+interface SetCurrentTagAction {
+    type: typeof SET_CURRENT_TAG
+    currentTag: Tag
+}
+
+interface AddTagToSelectedTagsAction {
+    type: typeof ADD_TAG_TO_SELECTED_TAGS
+}
+
+interface ClearNewPostDataAction {
+    type: typeof CLEAR_NEW_POST_DATA
+}
+
+export type QuestionActions = NewPostAction
+                            | SetNewTextAction
+                            | SetNewTitleAction
+                            | SetCurrentTagAction
+                            | AddTagToSelectedTagsAction
+                            | ClearNewPostDataAction;

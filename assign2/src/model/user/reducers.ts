@@ -1,5 +1,4 @@
 import {UserActions, UsersState} from "./types";
-import User from "../objects/User";
 import * as Data from '../SeedData'
 
 const initialState: UsersState = {

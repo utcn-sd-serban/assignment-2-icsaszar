@@ -5,7 +5,6 @@ const initialState: FilterState = {
     currentFilter: QuestionFilter.ALL_POSTS,
     searchedTag: new Tag(),
     searchedTitle: ""
-
 };
 
 export function filterReducer(state: FilterState = initialState, action: FilterActions): FilterState {
