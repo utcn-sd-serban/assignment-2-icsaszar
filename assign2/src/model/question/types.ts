@@ -3,9 +3,13 @@ import Question from "../objects/Question";
 import Tag from "../objects/Tag";
 
 export const NEW_POST = "NEW_POST";
+export const SET_NEW_POST_TITLE = "SET_NEW_POST_TITLE";
+export const SET_NEW_POST_TEXT = "SET_NEW_POST_TEXT";
 
 export interface QuestionsState{
-    questions: Question[]
+    questions: Question[];
+    newTitle: string;
+    newText: string;
 }
 
 interface NewPostAction{
@@ -18,4 +22,14 @@ interface NewPostAction{
     }
 }
 
-export type QuestionActions = NewPostAction;
+interface SetNewTitleAction {
+    type: typeof SET_NEW_POST_TITLE,
+    newTitle: string
+}
+
+interface SetNewTextAction {
+    type: typeof SET_NEW_POST_TEXT,
+    newText: string
+}
+
+export type QuestionActions = NewPostAction | SetNewTextAction | SetNewTitleAction;

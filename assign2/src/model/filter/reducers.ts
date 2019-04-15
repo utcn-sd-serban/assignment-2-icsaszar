@@ -1,8 +1,8 @@
-import {ALL_POSTS, FilterActions, FilterState, SET_FILTER, SET_SEARCHED_TAG, SET_SEARCHED_TITLE} from "./types";
+import {FilterActions, FilterState, QuestionFilter, SET_FILTER, SET_SEARCHED_TAG, SET_SEARCHED_TITLE} from "./types";
 import Tag from "../objects/Tag";
 
 const initialState: FilterState = {
-    currentFilter: ALL_POSTS,
+    currentFilter: QuestionFilter.ALL_POSTS,
     searchedTag: new Tag(),
     searchedTitle: ""
 
