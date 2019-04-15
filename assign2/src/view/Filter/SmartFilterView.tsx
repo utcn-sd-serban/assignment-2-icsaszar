@@ -1,71 +1,52 @@
-import {ALL_POSTS, FILTER_BY_TAG, FILTER_BY_TITLE, FilterState, QuestionFilter} from "../../model/filter/types";
+import {QuestionFilter} from "../../model/filter/types";
 import {Dispatch} from "redux";
+import * as React from "react";
 import {Component} from "react";
 import Tag from "../../model/objects/Tag";
 import {AppState} from "../../model/Model";
 import {doSetFilter, doSetSearchedTag, doSetSearchedTitle} from "../../model/filter/actions";
 import {connect} from "react-redux";
-import * as React from "react";
 import {FilterView} from "./FilterView";
-
-interface State {
-    searchedTag: string;
-    searchedTitle: string;
-}
 
 interface Props {
     tags: Tag[];
+    searchedTag: Tag;
+    searchedTitle: string;
     onSetFilter: (filter: QuestionFilter) => void;
     onSetSearchedTag: (tag: Tag) => void;
     onSetSearchedTitle: (title: string) => void;
 }
 
 
-class SmartFilterView extends Component<Props, State>{
-    state ={
-        searchedTag: this.props.tags[0].name,
-        searchedTitle: ""
-    };
-
+class SmartFilterView extends Component<Props>{
     onShowAll = () =>{
-        this.props.onSetFilter(ALL_POSTS)
+        this.props.onSetFilter(QuestionFilter.ALL_POSTS)
     };
 
     onFilterByTag = () =>{
-        const searchedTag = this.props.tags.find(tag => tag.name === this.state.searchedTag);
-        if(searchedTag)
-        {
-            this.props.onSetSearchedTag(searchedTag);
-            this.props.onSetFilter(FILTER_BY_TAG);
-        }
+        this.props.onSetFilter(QuestionFilter.FILTER_BY_TAG);
     };
 
     onFilterByTitle = () => {
-        this.props.onSetSearchedTitle(this.state.searchedTitle);
-        this.props.onSetFilter(FILTER_BY_TITLE);
+        this.props.onSetFilter(QuestionFilter.FILTER_BY_TITLE);
     };
 
     onChangeSearchedTitle = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        this.props.onSetSearchedTitle(e.target.value);
         e.preventDefault();
-        this.setState({
-            ...this.state,
-            searchedTitle: e.target.value
-        });
     };
 
     onChangeSearchedTag = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        e.preventDefault();
-        this.setState({
-            ...this.state,
-            searchedTag: e.target.value
-        });
+        const searchedTag = this.props.tags.find(tag => tag.name === e.target.value);
+        if(searchedTag)
+            this.props.onSetSearchedTag(searchedTag)
     };
 
     render() {
         return (
           <FilterView
               tags={this.props.tags}
-              title={this.state.searchedTitle}
+              title={this.props.searchedTitle}
               onShowAll={this.onShowAll}
               onFilterByTag={this.onFilterByTag}
               onFilterByTitle={this.onFilterByTitle}
@@ -78,7 +59,9 @@ class SmartFilterView extends Component<Props, State>{
 
 function mapStateToProps(state: AppState) {
     return {
-        tags: state.tagState.tags
+        tags: state.tagState.tags,
+        searchedTitle: state.filterState.searchedTitle,
+        searchedTag: state.filterState.searchedTag
     }
 }
 
