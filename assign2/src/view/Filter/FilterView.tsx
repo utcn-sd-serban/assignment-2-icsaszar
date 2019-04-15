@@ -1,6 +1,5 @@
 import React, {ChangeEventHandler} from 'react';
 import Tag from "../../model/objects/Tag";
-import Container from "react-bootstrap/Container";
 
 
 export function FilterView(
@@ -25,9 +24,9 @@ export function FilterView(
 ) {
     return (
         <div className={"container"}>
-            <button className={"btn btn-primary m-1"} onClick={onShowAll}> All</button>
+            <button className={"btn m-1 " + "btn-primary"} onClick={onShowAll}> All</button>
             <input placeholder={"Title"} value={title} onChange={onChangeSearchedTitle}/>
-            <button className={"btn btn-primary m-1"} onClick={onFilterByTitle}> By title</button>
+            <button className={"btn m-1 " + "btn-primary"} onClick={onFilterByTitle}> By title</button>
             <select onChange={onChangeSelectedTag}>
                 {
                     tags.map(tag =>
@@ -35,7 +34,7 @@ export function FilterView(
                     )
                 }
             </select>
-            <button className={"btn btn-primary m-1"} onClick={onFilterByTag}> By tag</button>
+            <button className={"btn m-1 " + "btn-primary"} onClick={onFilterByTag}> By tag</button>
         </div>
     )
 }

@@ -1,50 +1,41 @@
 import Question from '../../model/objects/Question'
 import React from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button'
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
-import Container from 'react-bootstrap/Container';
 
 
 function QuestionView({question}: {question: Question}) {
     const {title, text, author, posted, tags} = question;
     return (
-            <Container>
-                <Row>
-                    <Col> {title} </Col>
-                </Row>
-                <Row>
-                    <Col> {text} </Col>
-                </Row>
-                <Row>
-                    <Col> {author.name} </Col>
-                    <Col> {posted.toDateString()} </Col>
-                </Row>
-                <Row>
-                    <Col>
+            <div className={"container"}>
+                <div className={"row"}>
+                    <div className={"col"}> {title} </div>
+                </div>
+                <div className={"row"}>
+                    <div className={"col"}> {text} </div>
+                </div>
+                <div className={"row"}>
+                    <div className={"col"}> {author.name} </div>
+                    <div className={"col"}> {posted.toDateString()} </div>
+                </div>
+                <div className={"row"}>
+                    <div className={"col"}>
                     {
-                        <ButtonToolbar>
-                            {
-                                tags.map(tag =>
-                                    <Button variant={"outline-dark"} size={"sm"} > {tag.name} </Button>
-                                )
-                            }
-                        </ButtonToolbar>
+                        tags.map(tag =>
+                            <a className={"btn btn-outline-dark btn-sm"} > {tag.name} </a>
+                        )
                     }
-                    </Col>
-                </Row>
-            </Container>
+                    </div>
+                </div>
+            </div>
     )
 }
 
 export default function QuestionListView({questions}: {questions: Question[]}) {
     return (
-        <Container>
+        <div className={"container"}>
             {
                 questions.map(question =>
                 <QuestionView question={question} key={question.id}/>)
             }
-        </Container>
+        </div>
     );
 }

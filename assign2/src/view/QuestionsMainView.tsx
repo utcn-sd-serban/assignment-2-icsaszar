@@ -1,14 +1,14 @@
 import React, {Component} from "react";
-import SmartNewPostView from "./NewPost/SmartNewPostView";
 import SmartQuestionListView from "./QuestionList/SmartQuestionListView";
+import SmartFilterView from "./Filter/SmartFilterView";
 
 
 //Will be used to refactor the QuestionsList, NewPost and Filter components
 export default class QuestionsMainView extends Component{
     render(){
         return (
-            <div>
-                <SmartNewPostView />
+            <div className={"container"}>
+                <SmartFilterView />
                 <SmartQuestionListView/>
             </div>
         )

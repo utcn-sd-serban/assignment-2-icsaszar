@@ -1,4 +1,3 @@
-import Container from "react-bootstrap/Container";
 import React, {ChangeEventHandler} from 'react';
 import Tag from "../../model/objects/Tag";
 
@@ -27,7 +26,7 @@ export function NewPostView(
     })
 {
     return (
-        <Container>
+        <div className={"container"}>
             <input onChange={onChangeInput} value={title} placeholder={"Title"} name={"title"}/>
             <input onChange={onChangeInput} value={text} placeholder={"Text"} name={"text"}/>
             <button onClick={onSubmit} disabled={buttonDisabled}> Submit </button>
@@ -39,6 +38,6 @@ export function NewPostView(
                 }
             </select>
             <button onClick={onAddTag}>Add</button>
-        </Container>
+        </div>
     );
 }
