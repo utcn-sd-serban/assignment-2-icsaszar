@@ -1,9 +1,10 @@
 import {FilterActions, FilterState, QuestionFilter, SET_FILTER, SET_SEARCHED_TAG, SET_SEARCHED_TITLE} from "./types";
 import Tag from "../objects/Tag";
+import * as Data from '../SeedData'
 
 const initialState: FilterState = {
     currentFilter: QuestionFilter.ALL_POSTS,
-    searchedTag: new Tag(),
+    searchedTag: Data.tags[0],
     searchedTitle: ""
 };
 
