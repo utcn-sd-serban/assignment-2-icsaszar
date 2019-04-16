@@ -3,7 +3,7 @@ import {
     NEW_POST,
     QuestionActions,
     QuestionsState,
-    SET_CURRENT_TAG,
+    SET_CURRENT_TAG, SET_NEW_POST_FIELD,
     SET_NEW_POST_TEXT,
     SET_NEW_POST_TITLE
 } from "./types";
@@ -47,6 +47,21 @@ export function questionReducer(state: QuestionsState = initialState, action: Qu
                 ...state,
                 newTitle: action.newTitle
             };
+        case SET_NEW_POST_FIELD:
+            switch (action.field) {
+                case "title":
+                    return {
+                        ...state,
+                        newTitle: action.value
+                    };
+                case "text":
+                    return {
+                        ...state,
+                        newText: action.value
+                    };
+                default:
+                    return state;
+            }
         case NEW_POST:
             return {
                 ...state,

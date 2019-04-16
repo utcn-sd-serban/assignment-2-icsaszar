@@ -4,7 +4,7 @@ import {
     CLEAR_NEW_POST_DATA,
     NEW_POST,
     QuestionActions,
-    SET_CURRENT_TAG,
+    SET_CURRENT_TAG, SET_NEW_POST_FIELD,
     SET_NEW_POST_TEXT,
     SET_NEW_POST_TITLE
 } from "./types";
@@ -29,6 +29,14 @@ export function doSetNewText(newText: string): QuestionActions{
     return {
         type: SET_NEW_POST_TEXT,
         newText: newText
+    };
+}
+
+export function doSetNewField(field: string, newValue: string): QuestionActions{
+    return {
+        type: SET_NEW_POST_FIELD,
+        field: field,
+        value: newValue
     };
 }
 

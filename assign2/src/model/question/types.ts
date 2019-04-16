@@ -5,6 +5,7 @@ import Tag from "../objects/Tag";
 export const NEW_POST = "NEW_POST";
 export const SET_NEW_POST_TITLE = "SET_NEW_POST_TITLE";
 export const SET_NEW_POST_TEXT = "SET_NEW_POST_TEXT";
+export const SET_NEW_POST_FIELD = "SET_NEW_POST_FIELD";
 export const SET_CURRENT_TAG = "SET_CURRENT_TAG";
 export const ADD_TAG_TO_SELECTED_TAGS = "ADD_TAG_TO_SELECTED_TAGS";
 export const CLEAR_NEW_POST_DATA = "CLEAR_NEW_POST_DATA";
@@ -32,6 +33,12 @@ interface SetNewTextAction {
     newText: string
 }
 
+interface SetNewPostFieldAction {
+    type: typeof SET_NEW_POST_FIELD,
+    field: string,
+    value: string
+}
+
 interface SetCurrentTagAction {
     type: typeof SET_CURRENT_TAG
     currentTag: Tag
@@ -49,5 +56,6 @@ export type QuestionActions = NewPostAction
                             | SetNewTextAction
                             | SetNewTitleAction
                             | SetCurrentTagAction
+                            | SetNewPostFieldAction
                             | AddTagToSelectedTagsAction
                             | ClearNewPostDataAction;
