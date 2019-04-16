@@ -18,16 +18,16 @@ export function FilterView(
         onShowAll: () => void,
         onFilterByTag: () => void,
         onFilterByTitle: () => void,
-        onChangeSelectedTag: ChangeEventHandler
-        onChangeSearchedTitle: ChangeEventHandler
+        onChangeSelectedTag: (newTag: string) => void,
+        onChangeSearchedTitle: (newTitle: string) => void
     }
 ) {
     return (
         <div className={"container"}>
             <button className={"btn m-1 " + "btn-primary"} onClick={onShowAll}> All</button>
-            <input placeholder={"Title"} value={title} onChange={onChangeSearchedTitle}/>
+            <input placeholder={"Title"} value={title} onChange={({target: {value}}) => onChangeSearchedTitle(value)}/>
             <button className={"btn m-1 " + "btn-primary"} onClick={onFilterByTitle}> By title</button>
-            <select onChange={onChangeSelectedTag}>
+            <select onChange={({target: {value}}) => onChangeSelectedTag(value)}>
                 {
                     tags.map(tag =>
                         <option> {tag.name} </option>

@@ -31,13 +31,12 @@ class SmartFilterView extends Component<Props>{
         this.props.onSetFilter(QuestionFilter.FILTER_BY_TITLE);
     };
 
-    onChangeSearchedTitle = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.onSetSearchedTitle(e.target.value);
-        e.preventDefault();
+    onChangeSearchedTitle = (newTitle: string) => {
+        this.props.onSetSearchedTitle(newTitle);
     };
 
-    onChangeSearchedTag = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const searchedTag = this.props.tags.find(tag => tag.name === e.target.value);
+    onChangeSearchedTag = (newTag: string) => {
+        const searchedTag = this.props.tags.find(tag => tag.name === newTag);
         if(searchedTag)
             this.props.onSetSearchedTag(searchedTag)
     };

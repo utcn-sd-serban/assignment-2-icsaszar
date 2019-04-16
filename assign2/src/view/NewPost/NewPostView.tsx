@@ -16,8 +16,8 @@ export function NewPostView(
     {
         onSubmit: () => void,
         onAddTag: () => void,
-        onChangeInput: ChangeEventHandler,
-        onChangeTag: ChangeEventHandler,
+        onChangeInput: (field: string, value: string) => void,
+        onChangeTag: (newTag: string) => void,
         currentTag: string,
         title: string,
         text: string,
@@ -27,17 +27,39 @@ export function NewPostView(
 {
     return (
         <div className={"container"}>
-            <input onChange={onChangeInput} value={title} placeholder={"Title"} name={"title"}/>
-            <input onChange={onChangeInput} value={text} placeholder={"Text"} name={"text"}/>
-            <button onClick={onSubmit} disabled={buttonDisabled}> Submit </button>
-            <select onChange={onChangeTag} value={currentTag}>
+            <input
+                onChange={({target: {value, name}}) => onChangeInput(name, value)}
+                value={title}
+                placeholder={"Title"}
+                name={"title"}
+            />
+
+            <input
+                onChange={({target: {value, name}}) => onChangeInput(name, value)}
+                value={text}
+                placeholder={"Text"}
+                name={"text"}
+            />
+            <button
+                className={"btn m-1 " + "btn-primary"}
+                onClick={onSubmit}
+                disabled={buttonDisabled}
+            >
+                Submit
+            </button>
+            <select onChange={({target: {value}}) => onChangeTag(value)} value={currentTag}>
                 {
                     tags.map(tag =>
                         <option> {tag.name} </option>
                     )
                 }
             </select>
-            <button onClick={onAddTag}>Add</button>
+            <button
+                className={"btn m-1 " + "btn-primary"}
+                onClick={onAddTag}
+            >
+                Add
+            </button>
         </div>
     );
 }

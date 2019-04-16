@@ -35,14 +35,13 @@ interface Props {
 
 class SmartNewPostView extends Component<Props>{
 
-    handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        e.preventDefault();
-        switch (e.target.name) {
+    handleInputChange = (field: string, value: string) => {
+        switch (field) {
             case "title":
-                this.props.onSetNewTitle(e.target.value);
+                this.props.onSetNewTitle(value);
                 break;
             case "text":
-                this.props.onSetNewText(e.target.value);
+                this.props.onSetNewText(value);
                 break;
         }
     };
@@ -66,9 +65,8 @@ class SmartNewPostView extends Component<Props>{
         this.props.onAddTagToSelectedTags();
     };
 
-    handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) =>{
-        e.preventDefault();
-        const currentTag = this.props.tags.find(tag => tag.name === e.target.value);
+    handleTagChange = (newTag: string) =>{
+        const currentTag = this.props.tags.find(tag => tag.name === newTag);
         if(currentTag)
             this.props.onSetCurrentTag(currentTag);
     };
@@ -92,10 +90,13 @@ class SmartNewPostView extends Component<Props>{
 }
 
 function mapDispatchToPros(dispatch: Dispatch) {
+    //FIXME: Presenter as:
+    // - singleton returning action creators, or
+    // - class that takes as parameter in the constructor the dispatch, or
+    // - a hybrid approach with one global instance that has setDispatch
     return {
         onCreate: (postAuthor: User) =>
             dispatch(doNewPost(postAuthor)),
-
         onSetNewTitle: (newTitle: string) =>
             dispatch(doSetNewTitle(newTitle)),
         onSetNewText: (newText: string) =>
