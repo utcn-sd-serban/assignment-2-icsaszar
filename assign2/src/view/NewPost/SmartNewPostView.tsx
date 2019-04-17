@@ -12,6 +12,7 @@ import {NewPostView} from "./NewPostView";
 import Tag from "../../model/objects/Tag";
 import {AppState} from "../../model/Model";
 import {doNewTag} from "../../model/tag/actions";
+import {newPostPresenter} from "../../presesnter/NewPostPresenter";
 
 
 interface Props {
@@ -22,45 +23,15 @@ interface Props {
     currentTag: Tag;
     selectedTags: Tag[];
 
-    onCreate: (postAuthor: User) => void;
+    onCreate: (postAuthor?: User) => () => void;
     onSetNewField: (field: "title" | "text", newValue: string) => void;
     onAddTagToSelectedTags: () => void;
-    onSetCurrentTag: (currentTag: Tag) => void;
-    onClearNewPostData: () => void;
+    onSetCurrentTag: (tags: Tag[]) => (currentTag: string) => void;
 
     onNewTag: (name: string) => void;
 }
 
 class SmartNewPostView extends Component<Props>{
-
-    handleInputChange = (field: "title" | "text", value: string) => {
-        this.props.onSetNewField(field, value);
-    };
-
-    resetState = () => {
-        this.props.onClearNewPostData();
-    };
-
-    handleCreatePost = () => {
-        if(this.props.currentUser){
-            this.props.onCreate(this.props.currentUser);
-            this.resetState();
-        }
-    };
-
-    handleNewTag = () => {
-
-    };
-
-    handleAddTag = () => {
-        this.props.onAddTagToSelectedTags();
-    };
-
-    handleTagChange = (newTag: string) =>{
-        const currentTag = this.props.tags.find(tag => tag.name === newTag);
-        if(currentTag)
-            this.props.onSetCurrentTag(currentTag);
-    };
 
     render(){
         const {newText, newTitle, tags, currentTag} = this.props;
@@ -68,13 +39,13 @@ class SmartNewPostView extends Component<Props>{
             <NewPostView
                 text={newText}
                 title={newTitle}
-                onChangeInput={this.handleInputChange}
-                onSubmit={this.handleCreatePost}
+                onChangeInput={this.props.onSetNewField}
+                onSubmit={this.props.onCreate(this.props.currentUser)}
                 buttonDisabled={((newTitle.trim() === "") || (newText.trim() === ""))}
                 tags={tags}
-                onAddTag={this.handleAddTag}
+                onAddTag={this.props.onAddTagToSelectedTags}
                 currentTag={currentTag.name}
-                onChangeTag={this.handleTagChange}
+                onChangeTag={this.props.onSetCurrentTag(this.props.tags)}
             />
         );
     }
@@ -86,16 +57,14 @@ function mapDispatchToPros(dispatch: Dispatch) {
     // - class that takes as parameter in the constructor the dispatch, or
     // - a hybrid approach with one global instance that has setDispatch
     return {
-        onCreate: (postAuthor: User) =>
-            dispatch(doNewPost(postAuthor)),
+        onCreate: (postAuthor?: User) => () =>
+            newPostPresenter.handleCreatePost(dispatch)(postAuthor),
         onSetNewField: (field: "title" | "text", newValue: string) =>
-            dispatch(doSetNewField(field, newValue)),
+            newPostPresenter.handleInputChange(dispatch)(field, newValue),
         onAddTagToSelectedTags: () =>
-            dispatch(doAddTagToSelectedTags()),
-        onSetCurrentTag: (currentTag: Tag) =>
-            dispatch(doSetCurrentTag(currentTag)),
-        onClearNewPostData: () =>
-            dispatch(doClearNewPostData()),
+            newPostPresenter.handleAddTag(dispatch)(),
+        onSetCurrentTag: (tags: Tag[]) => (currentTag: string) =>
+            newPostPresenter.handleTagChange(dispatch)(currentTag, tags),
 
         onNewTag: (name: string) =>
             dispatch(doNewTag(name))
