@@ -21,7 +21,8 @@ export const tags: Tag[] = [
     new Tag("java", 1),
     new Tag("javascript",2),
     new Tag("pythonscript", 3),
-    new Tag("general", 4)
+    new Tag("general", 4),
+    new Tag("react", 5)
 ];
 
 export const questions: Question[] = [
@@ -29,12 +30,12 @@ export const questions: Question[] = [
         "Pls help",
         "Help my program keeps crashing",
         users[0],
-        tags.slice(3,4),
+        tags.slice(3, 4),
         1),
     new Question(
         "How do I A?",
         "Can someone please explain me how to do A?",
         users[1],
-        tags.slice(0,2),
+        tags.slice(0, 2),
         2)
 ];

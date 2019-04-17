@@ -50,7 +50,7 @@ export function NewPostView(
             <select onChange={({target: {value}}) => onChangeTag(value)} value={currentTag}>
                 {
                     tags.map(tag =>
-                        <option> {tag.name} </option>
+                        <option key={tag.id}> {tag.name} </option>
                     )
                 }
             </select>

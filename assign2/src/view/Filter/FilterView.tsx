@@ -30,7 +30,7 @@ export function FilterView(
             <select onChange={({target: {value}}) => onChangeSelectedTag(value)}>
                 {
                     tags.map(tag =>
-                        <option> {tag.name} </option>
+                        <option key={tag.id}> {tag.name} </option>
                     )
                 }
             </select>

@@ -4,7 +4,7 @@ class Tag {
 
     constructor(name: string = "", id: number = 0){
         this.name = name;
-        this.id = 0;
+        this.id = id;
     }
 }
 

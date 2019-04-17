@@ -20,7 +20,7 @@ function QuestionView({question}: { question: Question }) {
                 <div className={"col"}>
                     {
                         tags.map(tag =>
-                            <a className={"btn btn-outline-dark btn-sm mx-1"}> {tag.name} </a>
+                            <a key={tag.id} className={"btn btn-outline-dark btn-sm mx-1"}> {tag.name} </a>
                         )
                     }
                 </div>
