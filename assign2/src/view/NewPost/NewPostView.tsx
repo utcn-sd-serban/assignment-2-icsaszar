@@ -16,7 +16,7 @@ export function NewPostView(
     {
         onSubmit: () => void,
         onAddTag: () => void,
-        onChangeInput: (field: string, value: string) => void,
+        onChangeInput: (field: "title" | "text", value: string) => void,
         onChangeTag: (newTag: string) => void,
         currentTag: string,
         title: string,
@@ -28,14 +28,14 @@ export function NewPostView(
     return (
         <div className={"container"}>
             <input
-                onChange={({target: {value, name}}) => onChangeInput(name, value)}
+                onChange={({target: {value}}) => onChangeInput("title", value)}
                 value={title}
                 placeholder={"Title"}
                 name={"title"}
             />
 
             <input
-                onChange={({target: {value, name}}) => onChangeInput(name, value)}
+                onChange={({target: {value}}) => onChangeInput("text", value)}
                 value={text}
                 placeholder={"Text"}
                 name={"text"}

@@ -35,7 +35,7 @@ interface SetNewTextAction {
 
 interface SetNewPostFieldAction {
     type: typeof SET_NEW_POST_FIELD,
-    field: string,
+    field: "title" | "text",
     value: string
 }
 

@@ -32,7 +32,7 @@ export function doSetNewText(newText: string): QuestionActions{
     };
 }
 
-export function doSetNewField(field: string, newValue: string): QuestionActions{
+export function doSetNewField(field: "title" | "text", newValue: string): QuestionActions{
     return {
         type: SET_NEW_POST_FIELD,
         field: field,

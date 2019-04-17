@@ -1,4 +1,4 @@
-import React, {ChangeEventHandler} from 'react';
+import React from 'react';
 import Tag from "../../model/objects/Tag";
 
 

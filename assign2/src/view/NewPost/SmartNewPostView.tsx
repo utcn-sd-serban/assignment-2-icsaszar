@@ -3,9 +3,8 @@ import User from "../../model/objects/User";
 import {
     doAddTagToSelectedTags, doClearNewPostData,
     doNewPost,
-    doSetCurrentTag, doSetNewField,
-    doSetNewText,
-    doSetNewTitle
+    doSetCurrentTag,
+    doSetNewField
 } from "../../model/question/actions";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
@@ -24,7 +23,7 @@ interface Props {
     selectedTags: Tag[];
 
     onCreate: (postAuthor: User) => void;
-    onSetNewField: (field: string, newValue: string) => void;
+    onSetNewField: (field: "title" | "text", newValue: string) => void;
     onAddTagToSelectedTags: () => void;
     onSetCurrentTag: (currentTag: Tag) => void;
     onClearNewPostData: () => void;
@@ -34,7 +33,7 @@ interface Props {
 
 class SmartNewPostView extends Component<Props>{
 
-    handleInputChange = (field: string, value: string) => {
+    handleInputChange = (field: "title" | "text", value: string) => {
         this.props.onSetNewField(field, value);
     };
 
@@ -89,7 +88,7 @@ function mapDispatchToPros(dispatch: Dispatch) {
     return {
         onCreate: (postAuthor: User) =>
             dispatch(doNewPost(postAuthor)),
-        onSetNewField: (field: string, newValue: string) =>
+        onSetNewField: (field: "title" | "text", newValue: string) =>
             dispatch(doSetNewField(field, newValue)),
         onAddTagToSelectedTags: () =>
             dispatch(doAddTagToSelectedTags()),
