@@ -8,7 +8,7 @@ export default class QuestionsMainView extends Component{
     render(){
         return (
             <div className={"container"}>
-                <SmartFilterView />
+                <SmartFilterView/>
                 <SmartQuestionListView/>
             </div>
         )

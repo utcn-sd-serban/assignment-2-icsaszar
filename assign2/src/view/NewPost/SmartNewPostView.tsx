@@ -3,7 +3,7 @@ import User from "../../model/objects/User";
 import {
     doAddTagToSelectedTags, doClearNewPostData,
     doNewPost,
-    doSetCurrentTag,
+    doSetCurrentTag, doSetNewField,
     doSetNewText,
     doSetNewTitle
 } from "../../model/question/actions";
@@ -24,8 +24,7 @@ interface Props {
     selectedTags: Tag[];
 
     onCreate: (postAuthor: User) => void;
-    onSetNewTitle: (newTitle: string) => void;
-    onSetNewText: (newText: string) => void;
+    onSetNewField: (field: string, newValue: string) => void;
     onAddTagToSelectedTags: () => void;
     onSetCurrentTag: (currentTag: Tag) => void;
     onClearNewPostData: () => void;
@@ -36,14 +35,7 @@ interface Props {
 class SmartNewPostView extends Component<Props>{
 
     handleInputChange = (field: string, value: string) => {
-        switch (field) {
-            case "title":
-                this.props.onSetNewTitle(value);
-                break;
-            case "text":
-                this.props.onSetNewText(value);
-                break;
-        }
+        this.props.onSetNewField(field, value);
     };
 
     resetState = () => {
@@ -97,10 +89,8 @@ function mapDispatchToPros(dispatch: Dispatch) {
     return {
         onCreate: (postAuthor: User) =>
             dispatch(doNewPost(postAuthor)),
-        onSetNewTitle: (newTitle: string) =>
-            dispatch(doSetNewTitle(newTitle)),
-        onSetNewText: (newText: string) =>
-            dispatch(doSetNewText(newText)),
+        onSetNewField: (field: string, newValue: string) =>
+            dispatch(doSetNewField(field, newValue)),
         onAddTagToSelectedTags: () =>
             dispatch(doAddTagToSelectedTags()),
         onSetCurrentTag: (currentTag: Tag) =>
