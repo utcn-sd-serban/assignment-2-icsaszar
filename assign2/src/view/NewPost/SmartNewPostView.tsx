@@ -12,7 +12,7 @@ import {NewPostView} from "./NewPostView";
 import Tag from "../../model/objects/Tag";
 import {AppState} from "../../model/Model";
 import {doNewTag} from "../../model/tag/actions";
-import {newPostPresenter} from "../../presesnter/NewPostPresenter";
+import {newPostPresenter, newPostPresenter2} from "../../presesnter/NewPostPresenter";
 
 
 interface Props {
@@ -23,7 +23,7 @@ interface Props {
     currentTag: Tag;
     selectedTags: Tag[];
 
-    onCreate: (postAuthor?: User) => () => void;
+    onSubmitNewPost: (postAuthor?: User) => () => void;
     onSetNewField: (field: "title" | "text", newValue: string) => void;
     onAddTagToSelectedTags: () => void;
     onSetCurrentTag: (tags: Tag[]) => (currentTag: string) => void;
@@ -40,12 +40,12 @@ class SmartNewPostView extends Component<Props>{
                 text={newText}
                 title={newTitle}
                 onChangeInput={this.props.onSetNewField}
-                onSubmit={this.props.onCreate(this.props.currentUser)}
+                onSubmit={this.props.onSubmitNewPost(this.props.currentUser)}
                 buttonDisabled={((newTitle.trim() === "") || (newText.trim() === ""))}
                 tags={tags}
                 onAddTag={this.props.onAddTagToSelectedTags}
                 currentTag={currentTag.name}
-                onChangeTag={this.props.onSetCurrentTag(this.props.tags)}
+                onChangeTag={this.props.onSetCurrentTag(tags)}
             />
         );
     }
@@ -56,8 +56,9 @@ function mapDispatchToPros(dispatch: Dispatch) {
     // - singleton returning action creators, or
     // - class that takes as parameter in the constructor the dispatch, or
     // - a hybrid approach with one global instance that has setDispatch
+    const presenter = newPostPresenter2(dispatch);
     return {
-        onCreate: (postAuthor?: User) => () =>
+        onSubmitNewPost: (postAuthor?: User) => () =>
             newPostPresenter.handleCreatePost(dispatch)(postAuthor),
         onSetNewField: (field: "title" | "text", newValue: string) =>
             newPostPresenter.handleInputChange(dispatch)(field, newValue),
