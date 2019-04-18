@@ -34,14 +34,14 @@ class SmartNewPostView extends Component<Props>{
             <NewPostView
                 text={newText}
                 title={newTitle}
+                tags={tags}
+                selectedTags={this.props.selectedTags}
+                currentTag={currentTag.name}
                 onChangeInput={this.props.onSetNewField}
                 onSubmit={this.props.onSubmitNewPost(this.props.currentUser)}
                 buttonDisabled={((newTitle.trim() === "") || (newText.trim() === ""))}
-                tags={tags}
                 onAddTag={this.props.onAddTagToSelectedTags}
-                currentTag={currentTag.name}
                 onChangeTag={this.props.onSetCurrentTag(tags)}
-                selectedTags={this.props.selectedTags}
             />
         );
     }

@@ -1,6 +1,21 @@
 import React from 'react';
 import Tag from "../../model/objects/Tag";
 import TagListView from "../general/TagListView";
+import {NewPostField} from "../../model/question/types";
+
+interface Params {
+    onSubmit: () => void;
+    onAddTag: () => void;
+    onChangeInput: (field: NewPostField, value: string) => void;
+    onChangeTag: (newTag: string) => void;
+
+    currentTag: string;
+    title: string;
+    text: string;
+    buttonDisabled: boolean;
+    tags: Tag[];
+    selectedTags: Tag[]
+}
 
 export function NewPostView(
     {
@@ -14,19 +29,7 @@ export function NewPostView(
         buttonDisabled,
         tags,
         selectedTags
-    } :
-    {
-        onSubmit: () => void,
-        onAddTag: () => void,
-        onChangeInput: (field: "title" | "text", value: string) => void,
-        onChangeTag: (newTag: string) => void,
-        currentTag: string,
-        title: string,
-        text: string,
-        buttonDisabled: boolean,
-        tags: Tag[],
-        selectedTags: Tag[]
-    })
+    } : Params)
 {
     return (
         <div className={"container"}>
@@ -62,9 +65,9 @@ export function NewPostView(
             >
                 Add
             </button>
-            <span>
-                <TagListView tags={selectedTags}>Current Tags: </TagListView>
-            </span>
+            <TagListView tags={selectedTags}>
+                Current Tags:
+            </TagListView>
         </div>
     );
 }
