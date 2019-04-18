@@ -7,50 +7,33 @@ import {AppState} from "../../model/Model";
 import {doSetFilter, doSetSearchedTag, doSetSearchedTitle} from "../../model/filter/actions";
 import {connect} from "react-redux";
 import {FilterView} from "./FilterView";
+import {filterPresenter} from "../../presesnter/FilterPresenter";
 
 interface Props {
     tags: Tag[];
     searchedTag: Tag;
     searchedTitle: string;
-    onSetFilter: (filter: QuestionFilter) => void;
-    onSetSearchedTag: (tag: Tag) => void;
-    onSetSearchedTitle: (title: string) => void;
+
+    onShowAll: () => void,
+    onFilterByTag: () => void,
+    onFilterByTitle: () => void,
+
+    onSetSearchedTag: (tags: Tag[]) => (tag: string) => void,
+    onSetSearchedTitle: (title: string) => void
 }
 
 
 class SmartFilterView extends Component<Props>{
-    onShowAll = () =>{
-        this.props.onSetFilter(QuestionFilter.ALL_POSTS)
-    };
-
-    onFilterByTag = () =>{
-        this.props.onSetFilter(QuestionFilter.FILTER_BY_TAG);
-    };
-
-    onFilterByTitle = () => {
-        this.props.onSetFilter(QuestionFilter.FILTER_BY_TITLE);
-    };
-
-    onChangeSearchedTitle = (newTitle: string) => {
-        this.props.onSetSearchedTitle(newTitle);
-    };
-
-    onChangeSearchedTag = (newTag: string) => {
-        const searchedTag = this.props.tags.find(tag => tag.name === newTag);
-        if(searchedTag)
-            this.props.onSetSearchedTag(searchedTag)
-    };
-
-    render() {
+        render() {
         return (
           <FilterView
               tags={this.props.tags}
               title={this.props.searchedTitle}
-              onShowAll={this.onShowAll}
-              onFilterByTag={this.onFilterByTag}
-              onFilterByTitle={this.onFilterByTitle}
-              onChangeSearchedTitle={this.onChangeSearchedTitle}
-              onChangeSelectedTag={this.onChangeSearchedTag}
+              onShowAll={this.props.onShowAll}
+              onFilterByTag={this.props.onFilterByTag}
+              onFilterByTitle={this.props.onFilterByTitle}
+              onChangeSearchedTitle={this.props.onSetSearchedTitle}
+              onChangeSelectedTag={this.props.onSetSearchedTag(this.props.tags)}
           />
         );
     }
@@ -65,13 +48,19 @@ function mapStateToProps(state: AppState) {
 }
 
 function mapDispatchToProps(dispatch: Dispatch){
+    const presenter = filterPresenter(dispatch);
     return{
-        onSetFilter: (filter: QuestionFilter) =>
-            dispatch(doSetFilter(filter)),
-        onSetSearchedTag: (tag: Tag) =>
-            dispatch(doSetSearchedTag(tag)),
+        onShowAll: () =>
+            presenter.handleShowAll(),
+        onFilterByTag: () =>
+            presenter.handleFilterByTag(),
+        onFilterByTitle: () =>
+            presenter.handleFilterByTitle(),
+
+        onSetSearchedTag: (tags: Tag[]) => (tag: string) =>
+            presenter.handleChangeSearchedTag(tag, tags),
         onSetSearchedTitle: (title: string) =>
-            dispatch(doSetSearchedTitle(title))
+            presenter.handleChangeSearchedTitle(title)
     }
 }
 

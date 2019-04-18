@@ -12,7 +12,7 @@ import {NewPostView} from "./NewPostView";
 import Tag from "../../model/objects/Tag";
 import {AppState} from "../../model/Model";
 import {doNewTag} from "../../model/tag/actions";
-import {newPostPresenter, newPostPresenter2} from "../../presesnter/NewPostPresenter";
+import {newPostPresenter} from "../../presesnter/NewPostPresenter";
 
 
 interface Props {
@@ -52,20 +52,16 @@ class SmartNewPostView extends Component<Props>{
 }
 
 function mapDispatchToPros(dispatch: Dispatch) {
-    //FIXME: Presenter as:
-    // - singleton returning action creators, or
-    // - class that takes as parameter in the constructor the dispatch, or
-    // - a hybrid approach with one global instance that has setDispatch
-    const presenter = newPostPresenter2(dispatch);
+    const presenter = newPostPresenter(dispatch);
     return {
         onSubmitNewPost: (postAuthor?: User) => () =>
-            newPostPresenter.handleCreatePost(dispatch)(postAuthor),
+            presenter.handleCreatePost(postAuthor),
         onSetNewField: (field: "title" | "text", newValue: string) =>
-            newPostPresenter.handleInputChange(dispatch)(field, newValue),
+            presenter.handleInputChange(field, newValue),
         onAddTagToSelectedTags: () =>
-            newPostPresenter.handleAddTag(dispatch)(),
+            presenter.handleAddTag(),
         onSetCurrentTag: (tags: Tag[]) => (currentTag: string) =>
-            newPostPresenter.handleTagChange(dispatch)(currentTag, tags),
+            presenter.handleTagChange(currentTag, tags),
 
         onNewTag: (name: string) =>
             dispatch(doNewTag(name))
