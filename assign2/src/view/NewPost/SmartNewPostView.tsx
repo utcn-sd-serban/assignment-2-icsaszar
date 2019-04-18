@@ -40,6 +40,7 @@ class SmartNewPostView extends Component<Props>{
                 onAddTag={this.props.onAddTagToSelectedTags}
                 currentTag={currentTag.name}
                 onChangeTag={this.props.onSetCurrentTag(tags)}
+                selectedTags={this.props.selectedTags}
             />
         );
     }

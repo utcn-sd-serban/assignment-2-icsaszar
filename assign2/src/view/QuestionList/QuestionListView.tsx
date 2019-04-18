@@ -1,5 +1,6 @@
 import Question from '../../model/objects/Question'
 import React from 'react';
+import TagListView from "../general/TagListView";
 
 
 function QuestionView({question}: { question: Question }) {
@@ -18,11 +19,7 @@ function QuestionView({question}: { question: Question }) {
             </div>
             <div className={"row"}>
                 <div className={"col"}>
-                    {
-                        tags.map(tag =>
-                            <a key={tag.id} className={"btn btn-outline-dark btn-sm mx-1"}> {tag.name} </a>
-                        )
-                    }
+                    <TagListView tags={tags}/>
                 </div>
             </div>
         </div>

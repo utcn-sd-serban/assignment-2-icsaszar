@@ -1,5 +1,6 @@
 import React from 'react';
 import Tag from "../../model/objects/Tag";
+import TagListView from "../general/TagListView";
 
 export function NewPostView(
     {
@@ -11,7 +12,8 @@ export function NewPostView(
         title,
         text,
         buttonDisabled,
-        tags
+        tags,
+        selectedTags
     } :
     {
         onSubmit: () => void,
@@ -22,7 +24,8 @@ export function NewPostView(
         title: string,
         text: string,
         buttonDisabled: boolean,
-        tags: Tag[]
+        tags: Tag[],
+        selectedTags: Tag[]
     })
 {
     return (
@@ -33,7 +36,6 @@ export function NewPostView(
                 placeholder={"Title"}
                 name={"title"}
             />
-
             <input
                 onChange={({target: {value}}) => onChangeInput("text", value)}
                 value={text}
@@ -60,6 +62,9 @@ export function NewPostView(
             >
                 Add
             </button>
+            <span>
+                <TagListView tags={selectedTags}>Current Tags: </TagListView>
+            </span>
         </div>
     );
 }
