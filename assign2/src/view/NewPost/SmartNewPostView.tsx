@@ -7,6 +7,7 @@ import Tag from "../../model/objects/Tag";
 import {AppState} from "../../model/Model";
 import {doNewTag} from "../../model/tag/actions";
 import {newPostPresenter} from "../../presesnter/NewPostPresenter";
+import {NewPostField} from "../../model/question/types";
 
 
 interface Props {
@@ -18,7 +19,7 @@ interface Props {
     selectedTags: Tag[];
 
     onSubmitNewPost: (postAuthor?: User) => () => void;
-    onSetNewField: (field: "title" | "text", newValue: string) => void;
+    onSetNewField: (field: NewPostField, newValue: string) => void;
     onAddTagToSelectedTags: () => void;
     onSetCurrentTag: (tags: Tag[]) => (currentTag: string) => void;
 
@@ -51,7 +52,7 @@ function mapDispatchToPros(dispatch: Dispatch) {
     return {
         onSubmitNewPost: (postAuthor?: User) => () =>
             presenter.handleCreatePost(postAuthor),
-        onSetNewField: (field: "title" | "text", newValue: string) =>
+        onSetNewField: (field: NewPostField, newValue: string) =>
             presenter.handleInputChange(field, newValue),
         onAddTagToSelectedTags: () =>
             presenter.handleAddTag(),

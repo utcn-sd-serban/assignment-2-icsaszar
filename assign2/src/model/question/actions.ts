@@ -2,7 +2,7 @@ import User from "../objects/User";
 import {
     ADD_TAG_TO_SELECTED_TAGS,
     CLEAR_NEW_POST_DATA,
-    NEW_POST,
+    NEW_POST, NewPostField,
     QuestionActions,
     SET_CURRENT_TAG, SET_NEW_POST_FIELD,
     SET_NEW_POST_TEXT,
@@ -32,7 +32,7 @@ export function doSetNewText(newText: string): QuestionActions{
     };
 }
 
-export function doSetNewField(field: "title" | "text", newValue: string): QuestionActions{
+export function doSetNewField(field: NewPostField, newValue: string): QuestionActions{
     return {
         type: SET_NEW_POST_FIELD,
         field: field,

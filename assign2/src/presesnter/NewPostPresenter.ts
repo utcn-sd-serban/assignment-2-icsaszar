@@ -8,10 +8,11 @@ import {
 import {Dispatch} from "redux";
 import User from "../model/objects/User";
 import Tag from "../model/objects/Tag";
+import {NewPostField} from "../model/question/types";
 
 export const newPostPresenter = (dispatch: Dispatch) =>
     ({
-        handleInputChange: (field: "title" | "text", value: string) => {
+        handleInputChange: (field: NewPostField, value: string) => {
             dispatch(doSetNewField(field, value));
         },
 
