@@ -1,10 +1,8 @@
-import {QuestionFilter} from "../../model/filter/types";
 import {Dispatch} from "redux";
 import * as React from "react";
 import {Component} from "react";
 import Tag from "../../model/objects/Tag";
 import {AppState} from "../../model/Model";
-import {doSetFilter, doSetSearchedTag, doSetSearchedTitle} from "../../model/filter/actions";
 import {connect} from "react-redux";
 import {FilterView} from "./FilterView";
 import {filterPresenter} from "../../presesnter/FilterPresenter";

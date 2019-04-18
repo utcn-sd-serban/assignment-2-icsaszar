@@ -1,11 +1,5 @@
 import React, {Component} from "react";
 import User from "../../model/objects/User";
-import {
-    doAddTagToSelectedTags, doClearNewPostData,
-    doNewPost,
-    doSetCurrentTag,
-    doSetNewField
-} from "../../model/question/actions";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {NewPostView} from "./NewPostView";

@@ -2,7 +2,6 @@ import {Dispatch} from "redux";
 import {QuestionFilter} from "../model/filter/types";
 import {doSetFilter, doSetSearchedTag, doSetSearchedTitle} from "../model/filter/actions";
 import Tag from "../model/objects/Tag";
-import {doSetCurrentTag} from "../model/question/actions";
 
 export const filterPresenter = (dispatch: Dispatch) =>
     ({
