@@ -4,12 +4,9 @@ import Question from "../../model/objects/Question";
 import React, {Component} from "react";
 import {PostDetailsView} from "./PostDetailsView";
 import {connect} from "react-redux";
+import {RouteComponentProps} from "react-router";
 
-
-interface Props {
-    currentFilter: string
-    currentQuestion?: Question
-}
+type Props = {currentQuestion?: Question} & RouteComponentProps<{id: string}>
 
 class SmartPostDetailsView extends React.Component<Props>{
     render(){
@@ -22,8 +19,10 @@ class SmartPostDetailsView extends React.Component<Props>{
 
 
 function mapStateToProps(state: AppState, props: Props){
+    const id = props.match.params.id;
+    console.log(id);
     return {
-        currentQuestion: getCurrentQuestion(state, props.currentFilter)
+        currentQuestion: getCurrentQuestion(state, id)
     }
 }
 
