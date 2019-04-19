@@ -15,3 +15,6 @@ export const getFilteredQuestions = (state: AppState) => {
             return questions;
     }
 };
+
+export const getCurrentQuestion = (state: AppState, currentId: string) =>
+    state.questionState.questions.find(q => q.id === Number(currentId));
