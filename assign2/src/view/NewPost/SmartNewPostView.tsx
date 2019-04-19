@@ -8,8 +8,6 @@ import {AppState} from "../../model/Model";
 import {doNewTag} from "../../model/tag/actions";
 import {newPostPresenter} from "../../presesnter/NewPostPresenter";
 import {NewPostField} from "../../model/question/types";
-import {withRouter} from "react-router-dom";
-
 
 interface Props {
     tags: Tag[];

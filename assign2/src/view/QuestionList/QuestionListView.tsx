@@ -1,14 +1,17 @@
 import Question from '../../model/objects/Question'
 import React from 'react';
 import TagListView from "../general/TagListView";
+import {Link} from "react-router-dom";
 
 
 function QuestionView({question}: { question: Question }) {
-    const {title, text, author, posted, tags} = question;
+    const {title, text, author, posted, tags, id} = question;
     return (
         <div className={"container"}>
             <div className={"row"}>
-                <div className={"col"}> {title} </div>
+                <div className={"col"}>
+                    <Link to={`/posts/${id}`}> {title}</Link>
+                </div>
             </div>
             <div className={"row"}>
                 <div className={"col"}> {text} </div>
