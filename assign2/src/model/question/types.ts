@@ -1,14 +1,14 @@
 import User from "../objects/User";
 import Question from "../objects/Question";
 import Tag from "../objects/Tag";
+import Answer from "../objects/Answer";
 
 export const NEW_POST = "NEW_POST";
-export const SET_NEW_POST_TITLE = "SET_NEW_POST_TITLE";
-export const SET_NEW_POST_TEXT = "SET_NEW_POST_TEXT";
 export const SET_NEW_POST_FIELD = "SET_NEW_POST_FIELD";
 export const SET_CURRENT_TAG = "SET_CURRENT_TAG";
 export const ADD_TAG_TO_SELECTED_TAGS = "ADD_TAG_TO_SELECTED_TAGS";
 export const CLEAR_NEW_POST_DATA = "CLEAR_NEW_POST_DATA";
+export const ADD_ANSWER_TO_QUESTION = "ADD_ANSWER_TO_QUESTION";
 
 export interface QuestionsState{
     questions: Question[];
@@ -21,16 +21,6 @@ export interface QuestionsState{
 interface NewPostAction{
     type: typeof NEW_POST,
     postAuthor: User
-}
-
-interface SetNewTitleAction {
-    type: typeof SET_NEW_POST_TITLE,
-    newTitle: string
-}
-
-interface SetNewTextAction {
-    type: typeof SET_NEW_POST_TEXT,
-    newText: string
 }
 
 export type NewPostField = "title" | "text";
@@ -54,10 +44,15 @@ interface ClearNewPostDataAction {
     type: typeof CLEAR_NEW_POST_DATA
 }
 
+interface AddAnswerAction{
+    type: typeof ADD_ANSWER_TO_QUESTION,
+    targetQuestionId: number,
+    newAnswer: Answer
+}
+
 export type QuestionActions = NewPostAction
-                            | SetNewTextAction
-                            | SetNewTitleAction
                             | SetCurrentTagAction
                             | SetNewPostFieldAction
                             | AddTagToSelectedTagsAction
-                            | ClearNewPostDataAction;
+                            | ClearNewPostDataAction
+                            | AddAnswerAction;

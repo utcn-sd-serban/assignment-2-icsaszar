@@ -14,17 +14,14 @@ class Question extends Post{
         author: User = new User(),
         tags: Tag[] = [],
         id: number = 0,
-        posted: Date = new Date(),
-        answers: Answer[] = [])
+        answers: Answer[] = [],
+        posted: Date = new Date()
+        )
     {
         super(id, text, author, posted);
         this.title = title;
         this.answers = answers;
         this.tags = tags;
-    }
-
-    addAnswer(answer: Answer) {
-        this.answers = [...this.answers, answer];
     }
 }
 

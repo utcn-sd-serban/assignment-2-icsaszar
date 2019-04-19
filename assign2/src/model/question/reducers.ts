@@ -1,15 +1,15 @@
 import {
+    ADD_ANSWER_TO_QUESTION,
     ADD_TAG_TO_SELECTED_TAGS, CLEAR_NEW_POST_DATA,
     NEW_POST,
     QuestionActions,
     QuestionsState,
-    SET_CURRENT_TAG, SET_NEW_POST_FIELD,
-    SET_NEW_POST_TEXT,
-    SET_NEW_POST_TITLE
+    SET_CURRENT_TAG, SET_NEW_POST_FIELD
 } from "./types";
 import Question from "../objects/Question";
 import * as Data from '../SeedData'
 import Tag from "../objects/Tag";
+import {questions} from "../SeedData";
 
 const initialState: QuestionsState = {
     questions: Data.questions,
@@ -36,16 +36,6 @@ export function questionReducer(state: QuestionsState = initialState, action: Qu
             return {
                 ...initialState,
                questions: state.questions
-            };
-        case SET_NEW_POST_TEXT:
-            return {
-                ...state,
-                newText: action.newText
-            };
-        case SET_NEW_POST_TITLE:
-            return {
-                ...state,
-                newTitle: action.newTitle
             };
         case SET_NEW_POST_FIELD:
             switch (action.field) {
@@ -76,7 +66,13 @@ export function questionReducer(state: QuestionsState = initialState, action: Qu
                         )
                     ]
             };
-
+        case ADD_ANSWER_TO_QUESTION:
+            return {
+                ...state,
+                questions: questions.map(
+                    q => (q.id === action.targetQuestionId) ? {...q, answers: [...q.answers, action.newAnswer]} : q
+                    )
+            };
         default:
             return state;
     }

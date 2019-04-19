@@ -1,6 +1,15 @@
 import React from 'react';
 import Tag from "../../model/objects/Tag";
 
+interface Props{
+    tags: Tag[];
+    title: string;
+    onShowAll: () => void;
+    onFilterByTag: () => void;
+    onFilterByTitle: () => void;
+    onChangeSelectedTag: (newTag: string) => void;
+    onChangeSearchedTitle: (newTitle: string) => void;
+}
 
 export function FilterView(
     {
@@ -11,16 +20,7 @@ export function FilterView(
         onFilterByTitle,
         onChangeSelectedTag,
         onChangeSearchedTitle
-    }:
-    {
-        tags: Tag[],
-        title: string
-        onShowAll: () => void,
-        onFilterByTag: () => void,
-        onFilterByTitle: () => void,
-        onChangeSelectedTag: (newTag: string) => void,
-        onChangeSearchedTitle: (newTitle: string) => void
-    }
+    }: Props
 ) {
     return (
         <div className={"container"}>
