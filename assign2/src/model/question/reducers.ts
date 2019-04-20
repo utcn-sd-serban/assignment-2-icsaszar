@@ -1,6 +1,6 @@
 import {
     ADD_ANSWER_TO_QUESTION,
-    ADD_TAG_TO_SELECTED_TAGS, CLEAR_NEW_POST_DATA,
+    ADD_TAG_TO_SELECTED_TAGS, CLEAR_NEW_POST_DATA, DELETE_ANSWER, DELETE_QUESTION, EDIT_ANSWER, EDIT_QUESTION,
     NEW_POST,
     QuestionActions,
     QuestionsState,
@@ -8,19 +8,53 @@ import {
 } from "./types";
 import Question from "../objects/Question";
 import * as Data from '../SeedData'
-import Tag from "../objects/Tag";
-import {questions} from "../SeedData";
+import Answer from "../objects/Answer";
 
 const initialState: QuestionsState = {
     questions: Data.questions,
     newText: "",
     newTitle: "",
+    newAnswer: "",
     currentTag: Data.tags[0],
     selectedTags: []
 };
 
 export function questionReducer(state: QuestionsState = initialState, action: QuestionActions): QuestionsState{
     switch (action.type){
+        case EDIT_QUESTION:
+            return {
+                ...state,
+                questions: state.questions.map(q =>
+                    q.id === action.questionId ? {...q, text: action.newText} : q
+                )
+            };
+        case EDIT_ANSWER:
+            return {
+                ...state,
+                questions: state.questions.map(q => {
+                    return {
+                        ...q,
+                        answers: q.answers.map(a =>
+                            a.id === action.answerId ? {...a, text: action.newText} : a
+                        )
+                    }
+                })
+            };
+        case DELETE_QUESTION:
+            return {
+                ...state,
+                questions: state.questions.filter(q => q.id !== action.questionId)
+            };
+        case DELETE_ANSWER:
+            return {
+                ...state,
+                questions: state.questions.map(q => {
+                    return {
+                        ...q,
+                        answers: q.answers.filter(a => a.id !== action.answerId)
+                    }
+                })
+            };
         case SET_CURRENT_TAG:
             return {
                 ...state,
@@ -49,6 +83,11 @@ export function questionReducer(state: QuestionsState = initialState, action: Qu
                         ...state,
                         newText: action.value
                     };
+                case "answer":
+                    return {
+                        ...state,
+                        newAnswer: action.value
+                    };
                 default:
                     return state;
             }
@@ -67,10 +106,16 @@ export function questionReducer(state: QuestionsState = initialState, action: Qu
                     ]
             };
         case ADD_ANSWER_TO_QUESTION:
+            const newAnswer = new Answer(state.newAnswer, action.answerAuthor);
             return {
                 ...state,
-                questions: questions.map(
-                    q => (q.id === action.targetQuestionId) ? {...q, answers: [...q.answers, action.newAnswer]} : q
+                questions: state.questions.map(
+                    q => {
+                        if(q.id === action.targetQuestionId)
+                            return {...q, answers: [...q.answers, newAnswer]};
+                        else
+                            return q;
+                        }
                     )
             };
         default:
