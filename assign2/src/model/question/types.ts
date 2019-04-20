@@ -13,6 +13,8 @@ export const EDIT_QUESTION = "EDIT_QUESTION";
 export const EDIT_ANSWER = "EDIT_ANSWER";
 export const DELETE_QUESTION = "DELETE_QUESTION";
 export const DELETE_ANSWER = "DELETE_ANSWER";
+export const UPDATE_QUESTION = "UPDATE_QUESTION";
+export const UPDATE_ANSWER = "UPDATE_ANSWER";
 
 export interface QuestionsState {
     questions: Question[];
@@ -67,6 +69,16 @@ interface EditAnswerAction {
     newText: string
 }
 
+interface UpdateQuestionAction {
+    type: typeof UPDATE_QUESTION
+    questionId: number
+}
+
+interface UpdateAnswerAction {
+    type: typeof UPDATE_ANSWER
+    answerId: number
+}
+
 interface DeleteQuestionAction {
     type: typeof DELETE_QUESTION
     questionId: number
@@ -86,4 +98,6 @@ export type QuestionActions = NewPostAction
                             | EditQuestionAction
                             | EditAnswerAction
                             | DeleteQuestionAction
-                            | DeleteAnswerAction;
+                            | DeleteAnswerAction
+                            | UpdateAnswerAction
+                            | UpdateQuestionAction;

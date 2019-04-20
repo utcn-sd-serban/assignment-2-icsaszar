@@ -4,7 +4,7 @@ import {
     NEW_POST,
     QuestionActions,
     QuestionsState,
-    SET_CURRENT_TAG, SET_NEW_POST_FIELD
+    SET_CURRENT_TAG, SET_NEW_POST_FIELD, UPDATE_ANSWER, UPDATE_QUESTION
 } from "./types";
 import Question from "../objects/Question";
 import * as Data from '../SeedData'
@@ -21,24 +21,44 @@ const initialState: QuestionsState = {
 
 export function questionReducer(state: QuestionsState = initialState, action: QuestionActions): QuestionsState{
     switch (action.type){
+        case UPDATE_ANSWER:
+            return {
+                ...state,
+                questions: state.questions.map(q =>
+                    Question.clone(
+                    {
+                        ...q,
+                        answers: q.answers.map(a =>
+                            a.id === action.answerId ? Answer.clone({...a, text: a.tempText}) : a
+                        )
+                    }
+                ))
+            };
+        case UPDATE_QUESTION:
+            return {
+                ...state,
+                questions: state.questions.map(q =>
+                    q.id === action.questionId ? Question.clone({...q, text: q.tempText}) : q
+                )
+            };
         case EDIT_QUESTION:
             return {
                 ...state,
                 questions: state.questions.map(q =>
-                    q.id === action.questionId ? {...q, text: action.newText} : q
+                    q.id === action.questionId ? Question.clone({...q, tempText: action.newText}) : q
                 )
             };
         case EDIT_ANSWER:
             return {
                 ...state,
-                questions: state.questions.map(q => {
-                    return {
+                questions: state.questions.map(q =>
+                    Question.clone({
                         ...q,
                         answers: q.answers.map(a =>
-                            a.id === action.answerId ? {...a, text: action.newText} : a
+                            a.id === action.answerId ? Answer.clone({...a, tempText: action.newText}) : a
                         )
-                    }
-                })
+                    })
+                )
             };
         case DELETE_QUESTION:
             return {
@@ -112,7 +132,7 @@ export function questionReducer(state: QuestionsState = initialState, action: Qu
                 questions: state.questions.map(
                     q => {
                         if(q.id === action.targetQuestionId)
-                            return {...q, answers: [...q.answers, newAnswer]};
+                            return Question.clone({...q, answers: [...q.answers, newAnswer]});
                         else
                             return q;
                         }

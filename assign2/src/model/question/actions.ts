@@ -5,10 +5,9 @@ import {
     CLEAR_NEW_POST_DATA, DELETE_ANSWER, DELETE_QUESTION, EDIT_ANSWER, EDIT_QUESTION,
     NEW_POST, NewPostField,
     QuestionActions,
-    SET_CURRENT_TAG, SET_NEW_POST_FIELD
+    SET_CURRENT_TAG, SET_NEW_POST_FIELD, UPDATE_ANSWER, UPDATE_QUESTION
 } from "./types";
 import Tag from "../objects/Tag";
-import Answer from "../objects/Answer";
 
 
 export function doNewPost(author: User): QuestionActions{
@@ -66,6 +65,20 @@ export function doEditQuestion(questionId: number, newText: string): QuestionAct
         type: EDIT_QUESTION,
         questionId: questionId,
         newText: newText
+    };
+}
+
+export function doUpdateAnswer(answerId: number): QuestionActions{
+    return {
+        type: UPDATE_ANSWER,
+        answerId: answerId
+    };
+}
+
+export function doUpdateQuestion(questionId: number): QuestionActions{
+    return {
+        type: UPDATE_QUESTION,
+        questionId: questionId
     };
 }
 
