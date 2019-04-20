@@ -68,12 +68,12 @@ export function questionReducer(state: QuestionsState = initialState, action: Qu
         case DELETE_ANSWER:
             return {
                 ...state,
-                questions: state.questions.map(q => {
-                    return {
+                questions: state.questions.map(q =>
+                    Question.clone({
                         ...q,
                         answers: q.answers.filter(a => a.id !== action.answerId)
-                    }
-                })
+                    })
+                )
             };
         case SET_CURRENT_TAG:
             return {
