@@ -1,5 +1,6 @@
 import {AppState} from "../Model";
 import {QuestionFilter} from "../filter/types";
+import Post from "../objects/Post";
 
 export const getFilteredQuestions = (state: AppState) => {
     const {questions} = state.questionState;
@@ -19,3 +20,9 @@ export const getFilteredQuestions = (state: AppState) => {
 
 export const getCurrentQuestion = (state: AppState, currentId: string) =>
     state.questionState.questions.find(q => q.id === Number(currentId));
+
+export function getPostsByAuthorId(state: AppState, authorId: number): Post[] {
+    const questions = state.questionState.questions.filter(q => q.author.id === authorId);
+    const answers = state.questionState.questions.flatMap(q => q.answers).filter(a => a.author.id === authorId);
+    return [...questions, ...answers]
+}
