@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import SmartQuestionListView from "./QuestionList/SmartQuestionListView";
-import SmartFilterView from "./Filter/SmartFilterView";
+import SmartQuestionListView from "../QuestionList/SmartQuestionListView";
+import SmartFilterView from "../Filter/SmartFilterView";
 
 
 //Will be used to refactor the QuestionsList, NewPost and Filter components

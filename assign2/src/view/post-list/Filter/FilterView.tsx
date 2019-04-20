@@ -1,5 +1,5 @@
 import React from 'react';
-import Tag from "../../model/objects/Tag";
+import Tag from "../../../model/objects/Tag";
 
 interface Props{
     tags: Tag[];

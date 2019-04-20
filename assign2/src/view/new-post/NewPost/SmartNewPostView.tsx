@@ -1,13 +1,13 @@
 import React, {Component} from "react";
-import User from "../../model/objects/User";
+import User from "../../../model/objects/User";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {NewPostView} from "./NewPostView";
-import Tag from "../../model/objects/Tag";
-import {AppState} from "../../model/Model";
-import {doNewTag} from "../../model/tag/actions";
-import {newPostPresenter} from "../../presesnter/NewPostPresenter";
-import {NewPostField} from "../../model/question/types";
+import Tag from "../../../model/objects/Tag";
+import {AppState} from "../../../model/Model";
+import {doNewTag} from "../../../model/tag/actions";
+import {newPostPresenter} from "../../../presesnter/NewPostPresenter";
+import {NewPostField} from "../../../model/question/types";
 
 interface Props {
     tags: Tag[];

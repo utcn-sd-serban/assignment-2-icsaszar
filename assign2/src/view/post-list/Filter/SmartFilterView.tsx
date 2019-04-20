@@ -1,11 +1,11 @@
 import {Dispatch} from "redux";
 import * as React from "react";
 import {Component} from "react";
-import Tag from "../../model/objects/Tag";
-import {AppState} from "../../model/Model";
+import Tag from "../../../model/objects/Tag";
+import {AppState} from "../../../model/Model";
 import {connect} from "react-redux";
 import {FilterView} from "./FilterView";
-import {filterPresenter} from "../../presesnter/FilterPresenter";
+import {filterPresenter} from "../../../presesnter/FilterPresenter";
 
 interface Props {
     tags: Tag[];

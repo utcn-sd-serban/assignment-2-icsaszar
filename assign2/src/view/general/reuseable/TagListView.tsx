@@ -1,4 +1,4 @@
-import Tag from "../../model/objects/Tag";
+import Tag from "../../../model/objects/Tag";
 import * as React from "react";
 
 interface Props {

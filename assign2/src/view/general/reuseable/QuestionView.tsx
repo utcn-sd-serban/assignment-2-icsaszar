@@ -1,10 +1,9 @@
-import Question from '../../model/objects/Question'
-import React from 'react';
-import TagListView from "../general/TagListView";
+import Question from "../../../model/objects/Question";
 import {Link} from "react-router-dom";
+import TagListView from "./TagListView";
+import React from "react";
 
-
-function QuestionView({question}: { question: Question }) {
+export function QuestionView({question}: { question: Question }) {
     const {title, text, author, posted, tags, id} = question;
     return (
         <div className={"container"}>
@@ -27,15 +26,4 @@ function QuestionView({question}: { question: Question }) {
             </div>
         </div>
     )
-}
-
-export default function QuestionListView({questions}: { questions: Question[] }) {
-    return (
-        <div className={"container"}>
-            {
-                questions.map(question =>
-                    <QuestionView question={question} key={question.id}/>)
-            }
-        </div>
-    );
 }
