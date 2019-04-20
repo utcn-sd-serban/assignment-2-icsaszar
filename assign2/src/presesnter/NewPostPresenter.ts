@@ -9,6 +9,7 @@ import {Dispatch} from "redux";
 import User from "../model/objects/User";
 import Tag from "../model/objects/Tag";
 import {NewPostField} from "../model/question/types";
+import {doCreateNewTag, doEditNewTagName} from "../model/tag/actions";
 
 export const newPostPresenter = (dispatch: Dispatch) =>
     ({
@@ -28,9 +29,11 @@ export const newPostPresenter = (dispatch: Dispatch) =>
             }
         },
 
-        handleNewTag: () => {
+        handleCreateNewTag: () =>
+            dispatch(doCreateNewTag()),
 
-        },
+        handleChangeNewTagName: (newName: string) =>
+            dispatch(doEditNewTagName(newName)),
 
         handleAddTag: () => {
             dispatch(doAddTagToSelectedTags());

@@ -33,27 +33,29 @@ class SmartUserAccountView extends React.Component<Props> {
             <div>
                 <UserAccountView user={this.props.viewedProfile}/>
                 {
-                    this.props.posts.map( post => {
-                        if(post instanceof Question){
+                    this.props.posts.map(post => {
+                            if (post instanceof Question) {
                                 return (
                                     <QuestionView
                                         key={post.id}
                                         question={post}
                                         editable={{
                                             onSave: this.props.onUpdateQuestion(post.id),
-                                            onChangeInput: this.props.onQuestionInputChange(post.id)}}
+                                            onChangeInput: this.props.onQuestionInputChange(post.id)
+                                        }}
                                         onDelete={this.props.onDeleteQuestion(post.id)}
                                     />
                                 );
-                        }
-                        if(post instanceof Answer)
+                            }
+                            if (post instanceof Answer)
                                 return (
                                     <AnswerView
                                         key={post.id}
                                         answer={post}
                                         editable={{
                                             onSave: this.props.onUpdateAnswer(post.id),
-                                            onChangeInput: this.props.onAnswerInputChange(post.id)}}
+                                            onChangeInput: this.props.onAnswerInputChange(post.id)
+                                        }}
                                         onDelete={this.props.onDeleteAnswer(post.id)}
                                     />
                                 );

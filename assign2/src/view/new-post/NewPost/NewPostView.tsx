@@ -8,11 +8,15 @@ interface Params {
     onAddTag: () => void;
     onChangeInput: (field: NewPostField, value: string) => void;
     onChangeTag: (newTag: string) => void;
+    onChangeNewTagName: (newName: string) => void;
+    onCreateNewTag: () => void;
 
+    newTagName: string;
     currentTag: string;
     title: string;
     text: string;
-    buttonDisabled: boolean;
+    submitButtonDisabled: boolean;
+    newTagButtonDisabled: boolean;
     tags: Tag[];
     selectedTags: Tag[]
 }
@@ -23,10 +27,14 @@ export function NewPostView(
         onChangeInput,
         onAddTag,
         onChangeTag,
+        onChangeNewTagName,
+        onCreateNewTag,
+        newTagName,
         currentTag,
         title,
         text,
-        buttonDisabled,
+        submitButtonDisabled,
+        newTagButtonDisabled,
         tags,
         selectedTags
     } : Params)
@@ -48,7 +56,7 @@ export function NewPostView(
             <button
                 className={"btn m-1 " + "btn-primary"}
                 onClick={onSubmit}
-                disabled={buttonDisabled}
+                disabled={submitButtonDisabled}
             >
                 Submit
             </button>
@@ -64,6 +72,19 @@ export function NewPostView(
                 onClick={onAddTag}
             >
                 Add
+            </button>
+            <input
+                onChange={({target: {value}}) => onChangeNewTagName(value)}
+                value={newTagName}
+                placeholder={"Text"}
+                name={"text"}
+            />
+            <button
+                className={"btn m-1 " + "btn-primary"}
+                onClick={onCreateNewTag}
+                disabled={newTagButtonDisabled}
+            >
+                Create New Tag
             </button>
             <TagListView tags={selectedTags}>
                 Current Tags:

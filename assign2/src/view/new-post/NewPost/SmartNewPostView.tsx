@@ -5,9 +5,10 @@ import {connect} from "react-redux";
 import {NewPostView} from "./NewPostView";
 import Tag from "../../../model/objects/Tag";
 import {AppState} from "../../../model/Model";
-import {doNewTag} from "../../../model/tag/actions";
 import {newPostPresenter} from "../../../presesnter/NewPostPresenter";
 import {NewPostField} from "../../../model/question/types";
+import {doCreateNewTag} from "../../../model/tag/actions";
+import {isCurrentNewTagInTags} from "../../../model/tag/selectors";
 
 interface Props {
     tags: Tag[];
@@ -16,13 +17,16 @@ interface Props {
     newText: string;
     currentTag: Tag;
     selectedTags: Tag[];
+    newTagName: string;
+    existingTag: boolean;
 
     onSubmitNewPost: (postAuthor?: User) => () => void;
     onSetNewField: (field: NewPostField, newValue: string) => void;
     onAddTagToSelectedTags: () => void;
     onSetCurrentTag: (tags: Tag[]) => (currentTag: string) => void;
 
-    onNewTag: (name: string) => void;
+    onCreateNewTag: () => void;
+    onEditNewTagName: (newName: string) => void;
 }
 
 class SmartNewPostView extends Component<Props>{
@@ -36,9 +40,14 @@ class SmartNewPostView extends Component<Props>{
                 tags={tags}
                 selectedTags={this.props.selectedTags}
                 currentTag={currentTag.name}
+                newTagName={this.props.newTagName}
+
+                onChangeNewTagName={this.props.onEditNewTagName}
+                onCreateNewTag={this.props.onCreateNewTag}
                 onChangeInput={this.props.onSetNewField}
                 onSubmit={this.props.onSubmitNewPost(this.props.currentUser)}
-                buttonDisabled={((newTitle.trim() === "") || (newText.trim() === ""))}
+                submitButtonDisabled={((newTitle.trim() === "") || (newText.trim() === ""))}
+                newTagButtonDisabled={this.props.existingTag || (this.props.newTagName.trim() === "")}
                 onAddTag={this.props.onAddTagToSelectedTags}
                 onChangeTag={this.props.onSetCurrentTag(tags)}
             />
@@ -58,8 +67,10 @@ function mapDispatchToPros(dispatch: Dispatch) {
         onSetCurrentTag: (tags: Tag[]) => (currentTag: string) =>
             presenter.handleTagChange(currentTag, tags),
 
-        onNewTag: (name: string) =>
-            dispatch(doNewTag(name))
+        onCreateNewTag: () =>
+            presenter.handleCreateNewTag(),
+        onEditNewTagName: (newName: string) =>
+            presenter.handleChangeNewTagName(newName)
     }
 }
 
@@ -70,7 +81,9 @@ function mapStateToProps(state: AppState) {
         newTitle: state.questionState.newTitle,
         newText: state.questionState.newText,
         currentTag: state.questionState.currentTag,
-        selectedTags: state.questionState.selectedTags
+        selectedTags: state.questionState.selectedTags,
+        newTagName: state.tagState.newTagName,
+        existingTag: isCurrentNewTagInTags(state)
     }
 }
 
