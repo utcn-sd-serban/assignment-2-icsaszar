@@ -1,8 +1,14 @@
-import {NEW_TAG, TagAction} from "./types";
+import {CREATE_NEW_TAG, EDIT_NEW_TAG_NAME, TagAction} from "./types";
 
-export function doNewTag(name: string): TagAction {
+export function doCreateNewTag(): TagAction {
     return {
-        type: NEW_TAG,
-        tagName: name
+        type: CREATE_NEW_TAG
+    }
+}
+
+export function doEditNewTagName(newName: string): TagAction {
+    return {
+        type: EDIT_NEW_TAG_NAME,
+        newName: newName
     }
 }
