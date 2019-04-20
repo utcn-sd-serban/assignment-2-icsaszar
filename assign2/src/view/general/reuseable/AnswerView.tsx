@@ -11,9 +11,10 @@ interface OptionalProps {
 interface Props {
     answer: Answer;
     editable?: OptionalProps
+    onDelete?: () => void;
 }
 
-export function AnswerView({answer, editable}: Props){
+export function AnswerView({answer, editable, onDelete}: Props){
     const {author, posted, text} = answer;
     return (
         <div className="container border border-info p-1 rounded my-1">
@@ -22,7 +23,8 @@ export function AnswerView({answer, editable}: Props){
                 <EditField
                     onChangeInput={editable.onChangeInput}
                     onSave={editable.onSave}
-                    tempText={answer.tempText}/>
+                    tempText={answer.tempText}
+                    onDelete={onDelete}/>
 
             }
             <div className={"row"}>

@@ -22,6 +22,8 @@ interface Props {
     onAnswerInputChange: (answerId: number) => (value: string) => void;
     onUpdateQuestion: (questionId: number) => () => void;
     onUpdateAnswer: (answerId: number) => () => void;
+    onDeleteQuestion: (questionId: number) => () => void;
+    onDeleteAnswer: (answerId: number) => () => void;
 }
 
 class SmartUserAccountView extends React.Component<Props> {
@@ -39,7 +41,9 @@ class SmartUserAccountView extends React.Component<Props> {
                                         question={post}
                                         editable={{
                                             onSave: this.props.onUpdateQuestion(post.id),
-                                            onChangeInput: this.props.onQuestionInputChange(post.id)}}/>
+                                            onChangeInput: this.props.onQuestionInputChange(post.id)}}
+                                        onDelete={this.props.onDeleteQuestion(post.id)}
+                                    />
                                 );
                         }
                         if(post instanceof Answer)
@@ -49,7 +53,9 @@ class SmartUserAccountView extends React.Component<Props> {
                                         answer={post}
                                         editable={{
                                             onSave: this.props.onUpdateAnswer(post.id),
-                                            onChangeInput: this.props.onAnswerInputChange(post.id)}}/>
+                                            onChangeInput: this.props.onAnswerInputChange(post.id)}}
+                                        onDelete={this.props.onDeleteAnswer(post.id)}
+                                    />
                                 );
                         }
                     )
@@ -78,7 +84,11 @@ function mapDispatchToProps(dispatch: Dispatch) {
         onUpdateQuestion: (questionId: number) => () =>
             presenter.handleUpdateQuestion(questionId),
         onUpdateAnswer: (answerId: number) => () =>
-            presenter.handleUpdateAnswer(answerId)
+            presenter.handleUpdateAnswer(answerId),
+        onDeleteQuestion: (questionId: number) => () =>
+            presenter.handleDeleteQuestion(questionId),
+        onDeleteAnswer: (answerId: number) => () =>
+            presenter.handleDeleteAnswer(answerId)
     }
 }
 

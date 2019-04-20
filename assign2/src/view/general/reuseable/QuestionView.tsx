@@ -4,7 +4,7 @@ import TagListView from "./TagListView";
 import React from "react";
 import {EditField} from "./EditField";
 
-interface OptionalProps {
+interface EditableProps {
     onChangeInput: (newValue: string) => void;
     onSave: () => void;
 }
@@ -12,7 +12,8 @@ interface OptionalProps {
 interface Props {
     question: Question;
     titleIsLink?: boolean;
-    editable?: OptionalProps
+    editable?: EditableProps;
+    onDelete?: () => void;
 }
 
 function QuestionTitle({title, id, isLink}: {title: string, id: number, isLink: boolean}) {
@@ -28,7 +29,8 @@ export function QuestionView(
     {
         question,
         titleIsLink = true,
-        editable
+        editable,
+        onDelete
     }
         : Props) {
     const {title, text, author, posted, tags, id} = question;
@@ -42,6 +44,7 @@ export function QuestionView(
             {
                 editable &&
                     <EditField
+                        onDelete={onDelete}
                         onChangeInput={editable.onChangeInput}
                         onSave={editable.onSave}
                         tempText={question.tempText}/>

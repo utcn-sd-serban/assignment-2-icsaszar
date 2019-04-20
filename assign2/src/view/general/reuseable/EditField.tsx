@@ -1,12 +1,13 @@
 import React from "react";
 
-interface Props {
+interface EditableProps {
     onChangeInput: (newValue: string) => void;
     onSave: () => void;
     tempText: string;
+    onDelete?: () => void;
 }
 
-export function EditField({onChangeInput, onSave, tempText}: Props){
+export function EditField({onChangeInput, onSave, tempText, onDelete}: EditableProps){
     return (
         <div className="row">
             <div className="col">
@@ -23,5 +24,16 @@ export function EditField({onChangeInput, onSave, tempText}: Props){
                     Save changes
                 </button>
             </div>
+            {
+                onDelete &&
+                <div className="col">
+                    <button
+                        className="btn m-1 btn-danger"
+                        onClick={onDelete}
+                    >
+                        Delete
+                    </button>
+                </div>
+            }
         </div>);
 }

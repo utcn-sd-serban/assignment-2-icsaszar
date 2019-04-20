@@ -1,5 +1,12 @@
 import {Dispatch} from "redux";
-import {doEditAnswer, doEditQuestion, doUpdateAnswer, doUpdateQuestion} from "../model/question/actions";
+import {
+    doDeleteAnswer,
+    doDeleteQuestion,
+    doEditAnswer,
+    doEditQuestion,
+    doUpdateAnswer,
+    doUpdateQuestion
+} from "../model/question/actions";
 
 export const userAccountPresenter = (dispatch: Dispatch) => ({
     handleQuestionInputChange: (questionId: number, value: string) =>
@@ -10,4 +17,8 @@ export const userAccountPresenter = (dispatch: Dispatch) => ({
         dispatch(doUpdateQuestion(questionId)),
     handleUpdateAnswer: (answerId: number) =>
         dispatch(doUpdateAnswer(answerId)),
+    handleDeleteQuestion: (questionId: number) =>
+        dispatch(doDeleteQuestion(questionId)),
+    handleDeleteAnswer: (answerId: number) =>
+        dispatch(doDeleteAnswer(answerId)),
 });
