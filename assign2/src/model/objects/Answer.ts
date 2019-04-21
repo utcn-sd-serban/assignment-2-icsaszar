@@ -1,5 +1,4 @@
 import Post from './Post';
-import Question from "./Question";
 import User from "./User";
 
 class Answer extends Post {
@@ -8,8 +7,9 @@ class Answer extends Post {
         author: User = new User(),
         id: number = 0,
         posted: Date = new Date(),
-        tempText: string = text) {
-        super(id, text, author, posted, tempText);
+        tempText: string = text,
+        score: number = 0) {
+        super(id, text, author, posted, tempText, score);
     }
     
     static clone(
@@ -18,15 +18,17 @@ class Answer extends Post {
             author,
             id,
             posted,
-            tempText
+            tempText,
+            score
         }: {
             text: string,
             author: User,
             id: number,
             posted: Date,
-            tempText: string
+            tempText: string,
+            score: number
         }): Answer {
-        return new Answer(text, author, id, posted, tempText);
+        return new Answer(text, author, id, posted, tempText, score);
     }
 }
 

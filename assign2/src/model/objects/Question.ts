@@ -16,9 +16,10 @@ class Question extends Post {
         id: number = 0,
         answers: Answer[] = [],
         posted: Date = new Date(),
-        tempText: string = text
+        tempText: string = text,
+        score: number = 0
     ) {
-        super(id, text, author, posted, tempText);
+        super(id, text, author, posted, tempText, score);
         this.title = title;
         this.answers = answers;
         this.tags = tags;
@@ -33,7 +34,8 @@ class Question extends Post {
             id,
             answers,
             posted,
-            tempText
+            tempText,
+            score
         }: {
             title: string,
             text: string,
@@ -42,9 +44,10 @@ class Question extends Post {
             id: number,
             answers: Answer[],
             posted: Date,
-            tempText: string
+            tempText: string,
+            score: number
         }): Question {
-        return new Question(title, text, author, tags, id, answers, posted, tempText)
+        return new Question(title, text, author, tags, id, answers, posted, tempText, score)
     }
 }
 

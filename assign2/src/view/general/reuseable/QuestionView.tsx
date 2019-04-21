@@ -4,6 +4,7 @@ import TagListView from "./TagListView";
 import React from "react";
 import {EditField} from "./EditField";
 
+
 interface EditableProps {
     onChangeInput: (newValue: string) => void;
     onSave: () => void;
