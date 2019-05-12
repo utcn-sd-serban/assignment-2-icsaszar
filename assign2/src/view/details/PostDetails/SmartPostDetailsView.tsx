@@ -7,7 +7,6 @@ import {connect} from "react-redux";
 import {Dispatch} from "redux";
 import {postDetailsPresenter} from "../../../presesnter/PostDetailsPresenter";
 import {VoteDirection} from "../../../model/objects/Vote";
-import User from "../../../model/objects/User";
 
 interface Props {
     currentQuestion?: Question;
@@ -28,7 +27,6 @@ class SmartPostDetailsView extends React.Component<Props> {
 
 
 function mapStateToProps(state: AppState, props: { currentQuestionId: string }) {
-    //FIXME Where should id be validated? We receive a string but it must be a number
     const id = props.currentQuestionId;
     return {
         currentQuestion: getQuestionAndAnswersWithVotes(state, id)

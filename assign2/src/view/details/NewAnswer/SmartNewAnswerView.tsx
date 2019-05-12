@@ -31,7 +31,7 @@ class SmartNewAnswerView extends React.Component<Props>{
 function mapStateToProps(state: AppState, props: {currentQuestionId: string}) {
     return {
         currentUser: state.userState.currentUser,
-        currentText: state.questionState.newAnswer,
+        currentText: state.questionState.newAnswerText,
         currentQuestionId: props.currentQuestionId
     }
 }

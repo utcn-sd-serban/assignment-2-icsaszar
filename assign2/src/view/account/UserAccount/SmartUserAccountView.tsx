@@ -17,7 +17,6 @@ import {userAccountPresenter} from "../../../presesnter/UserAccountPresenter";
 interface Props {
     posts: Post[];
     currentUser?: User;
-    viewedProfile?: User;
     onQuestionInputChange: (questionId: number) => (value: string) => void;
     onAnswerInputChange: (answerId: number) => (value: string) => void;
     onUpdateQuestion: (questionId: number) => () => void;
@@ -29,9 +28,9 @@ interface Props {
 class SmartUserAccountView extends React.Component<Props> {
     render() {
         return (
-            this.props.viewedProfile &&
+            this.props.currentUser &&
             <div>
-                <UserAccountView user={this.props.viewedProfile}/>
+                <UserAccountView user={this.props.currentUser}/>
                 {
                     this.props.posts.map(post => {
                             if (post instanceof Question) {
@@ -71,8 +70,7 @@ function mapStateToProps(state: AppState, props: RouteComponentProps<{ id: strin
     const currentUser = state.userState.currentUser;
     return {
         currentUser: currentUser,
-        posts: currentUser ? getPostsByAuthorId(state, Number(props.match.params.id)) : [],
-        viewedProfile: getUserById(state, Number(props.match.params.id))
+        posts: currentUser ? getPostsByAuthorId(state, Number(props.match.params.id)) : []
     }
 }
 

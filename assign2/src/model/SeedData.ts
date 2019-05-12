@@ -6,7 +6,7 @@ import Answer from "./objects/Answer";
 export const users: User[] = [
     {
         id: 1,
-        name: "User1"
+        name: "User2"
     },
     {
         id: 2,
