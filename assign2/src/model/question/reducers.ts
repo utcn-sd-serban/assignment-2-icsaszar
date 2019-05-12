@@ -19,23 +19,41 @@ import {
     EditAnswerAction,
     DeleteQuestionAction,
     DeleteAnswerAction,
-    AddTagToSelectedTagsAction, SetCurrentTagAction, SetNewPostFieldAction, NewPostAction, AddAnswerAction
+    AddTagToSelectedTagsAction,
+    SetCurrentTagAction,
+    SetNewPostFieldAction,
+    NewPostAction,
+    AddAnswerAction,
+    REQUEST_POSTS,
+    RECEIVE_POSTS, ReceivePostsAction, NewQuestionState
 } from "./types";
 import Question from "../objects/Question";
 import * as Data from '../SeedData'
 import Answer from "../objects/Answer";
+import {AppState} from "../Model";
+
+
 
 const initialState: QuestionsState = {
     questions: Data.questions,
-    newText: "",
-    newTitle: "",
-    newAnswer: "",
-    currentTag: Data.tags[0],
-    selectedTags: []
+    newQuestion: {
+        currentTag: Data.tags[0],
+        newText: "",
+        newTitle: "",
+        selectedTags: []
+    },
+    newAnswerText: "",
+    isFetching: false,
+    lastFetch: undefined
 };
 
+//Splitting this would be nice...
 export function questionReducer(state: QuestionsState = initialState, action: QuestionActions): QuestionsState{
     switch (action.type){
+        case REQUEST_POSTS:
+            return fetchPosts(state);
+        case RECEIVE_POSTS:
+            return receivePosts(state, action);
         case SAVE_UPDATED_ANSWER:
             return saveUpdatedAnswer(state, action);
         case SAVE_UPDATED_QUESTION:
@@ -51,18 +69,52 @@ export function questionReducer(state: QuestionsState = initialState, action: Qu
         case SET_CURRENT_TAG:
             return setCurrentTag(state, action);
         case ADD_TAG_TO_SELECTED_TAGS:
-            return addTagToSelectedTags(state);
+            return {
+                ...state,
+                newQuestion: addTagToSelectedTags(state.newQuestion)
+            };
         case CLEAR_NEW_POST_DATA:
             return clearNewPostData(state);
         case SET_NEW_POST_FIELD:
-            return setNewPostField(state, action);
+            return{
+                ...state,
+                newQuestion: setNewPostField(state.newQuestion, action)
+            };
         case NEW_POST:
             return createNewPost(state, action);
         case ADD_ANSWER_TO_QUESTION:
             return addAnswer(state, action);
+
         default:
             return state;
     }
+}
+
+function fetchPosts(state: QuestionsState) {
+    return {
+        ...state,
+        isFetching: true
+    };
+}
+
+function receivePosts(state: QuestionsState, action: ReceivePostsAction) {
+    return {
+        ...state,
+        isFetching: false,
+        questions: action.status === 'succeeded' ?
+            action.data.map(
+            q => Question.clone({
+                ...q,
+                posted: new Date(q.posted),
+                answers: q.answers.map(a =>
+                    Answer.clone({
+                        ...a,
+                        posted: new Date(a.posted)
+                    })
+                )
+            })
+        ) : state.questions
+    };
 }
 
 function saveUpdatedAnswer(state: QuestionsState, action: UpdateAnswerAction) {
@@ -138,10 +190,9 @@ function setCurrentTag(state: QuestionsState, action: SetCurrentTagAction) {
     };
 }
 
-function addTagToSelectedTags(state: QuestionsState) {
+function addTagToSelectedTags(state: NewQuestionState) {
     return {
         ...state,
-        //TODO better validation
         selectedTags: state.selectedTags.includes(state.currentTag) ? state.selectedTags : [...state.selectedTags, state.currentTag]
     };
 }
@@ -153,7 +204,7 @@ function clearNewPostData(state: QuestionsState) {
     };
 }
 
-function setNewPostField(state: QuestionsState, action: SetNewPostFieldAction) {
+function setNewPostField(state: NewQuestionState, action: SetNewPostFieldAction) {
     switch (action.field) {
         case "title":
             return {
@@ -176,23 +227,18 @@ function setNewPostField(state: QuestionsState, action: SetNewPostFieldAction) {
 }
 
 function createNewPost(state: QuestionsState, action: NewPostAction){
+    let newQuestion = Question.clone({
+        ...action.data,
+        posted: new Date(action.data.posted)
+    });
     return {
         ...state,
-        questions:
-            [
-                ...state.questions,
-                new Question(
-                    state.newTitle,
-                    state.newText,
-                    action.postAuthor,
-                    state.selectedTags
-                )
-            ]
+        questions: [...state.questions, newQuestion]
     };
 }
 
 function addAnswer(state: QuestionsState, action: AddAnswerAction){
-    const newAnswer = new Answer(state.newAnswer, action.answerAuthor);
+    const newAnswer = new Answer(state.newAnswerText, action.answerAuthor);
     return {
         ...state,
         questions: state.questions.map(

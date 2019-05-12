@@ -1,11 +1,15 @@
-import {FilterActions, QuestionFilter, SET_FILTER, SET_SEARCHED_TAG, SET_SEARCHED_TITLE} from "./types";
+import {
+    FilterActions,
+    QuestionFilter,
+    SET_FILTER,
+    SET_SEARCHED_TAG,
+    SET_SEARCHED_TITLE,
+    SetFilterAction
+} from "./types";
 import Tag from "../objects/Tag";
 
 export function doSetFilter(filter: QuestionFilter): FilterActions {
-    return {
-        type: SET_FILTER,
-        filter: filter
-    };
+    return new SetFilterAction(filter)
 }
 
 export function doSetSearchedTag(tag: Tag): FilterActions {

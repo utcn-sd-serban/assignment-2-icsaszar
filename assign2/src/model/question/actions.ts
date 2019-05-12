@@ -1,15 +1,10 @@
 import User from "../objects/User";
 import {
-    ADD_ANSWER_TO_QUESTION,
     ADD_TAG_TO_SELECTED_TAGS,
     CLEAR_NEW_POST_DATA,
-    DELETE_ANSWER,
-    DELETE_QUESTION,
     EDIT_ANSWER,
     EDIT_QUESTION,
-    NEW_POST,
     NewPostField,
-    QuestionActions,
     SET_CURRENT_TAG,
     SET_NEW_POST_FIELD,
     SAVE_UPDATED_ANSWER,
@@ -21,13 +16,24 @@ import {
     SetNewPostFieldAction,
     SetCurrentTagAction,
     AddTagToSelectedTagsAction,
-    ClearNewPostDataAction, EditAnswerAction, EditQuestionAction, UpdateAnswerAction, UpdateQuestionAction
+    ClearNewPostDataAction,
+    EditAnswerAction,
+    EditQuestionAction,
+    UpdateAnswerAction,
+    UpdateQuestionAction,
+    RequestPostsAction, REQUEST_POSTS, ReceivePostsAction, RECEIVE_POSTS
 } from "./types";
 import Tag from "../objects/Tag";
+import Question, {QuestionDTO} from "../objects/Question";
+import RestClient from "../../rest/RestClient";
+import {ThunkAction, ThunkDispatch} from "redux-thunk";
+import {AnyAction} from "redux";
+import {AppState} from "../Model";
+import {Command} from "../command/types";
+import {number} from "prop-types";
 
-
-export function doNewPost(author: User): NewPostAction{
-    return new NewPostAction(author);
+export function doNewPost(data: Question, status: 'succeeded' | 'failed'): NewPostAction{
+    return new NewPostAction(data, status);
 }
 
 export function doSetNewField(field: NewPostField, newValue: string): SetNewPostFieldAction{
@@ -97,4 +103,61 @@ export function doDeleteAnswer(answerId: number): DeleteAnswerAction{
 
 export function doDeleteQuestion(questionId: number): DeleteQuestionAction{
     return new DeleteQuestionAction(questionId);
+}
+
+export function doRequestPosts(): RequestPostsAction {
+    return {
+        type: REQUEST_POSTS
+    };
+}
+
+export function doReceivePosts(data: Question[], status: 'succeeded' | 'failed'): ReceivePostsAction {
+    return {
+        type: RECEIVE_POSTS,
+        data: data,
+        status: status
+    };
+}
+
+type ThunkResult<R> = ThunkAction<R, AppState, undefined, Command>;
+
+export function fetchPosts(): ThunkResult<void>{
+    return function(dispatch, getState){
+        let {userState: {currentUser}} = getState();
+        if(currentUser){
+            dispatch(doRequestPosts());
+            let restClient = new RestClient(currentUser.name, currentUser.password);
+            return restClient.loadPosts().then(
+                response => {
+                    if (response.status === 'succeeded')
+                        response.data.json().then(data =>
+                            dispatch(doReceivePosts(data, response.status)))
+
+                })
+        }
+    }
+}
+
+export function sendNewPost(): ThunkResult<void> {
+    return function (dispatch, getState) {
+        let {userState: {currentUser}} = getState();
+        if(currentUser){
+            let restClient = new RestClient(currentUser.name, currentUser.password);
+            let {newText, newTitle, selectedTags} = getState().questionState.newQuestion;
+            let qDTO: QuestionDTO = {
+                author: currentUser,
+                tags: selectedTags,
+                text: newText,
+                title: newTitle
+            };
+            return restClient.sendNewPost(qDTO).then(
+                response => {
+                    if (response.status === 'succeeded')
+                        response.data.json().then(data =>
+                            dispatch(doNewPost(data, response.status)))
+
+                })
+        }
+    }
+
 }

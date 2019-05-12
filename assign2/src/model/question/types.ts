@@ -17,27 +17,37 @@ export const DELETE_QUESTION = "[QUESTION] DELETE QUESTION";
 export const DELETE_ANSWER = "[QUESTION] DELETE ANSWER";
 export const SAVE_UPDATED_QUESTION = "[QUESTION] SAVE UPDATED QUESTION";
 export const SAVE_UPDATED_ANSWER = "[QUESTION] SAVE UPDATED ANSWER";
+export const REQUEST_POSTS = "[QUESTION] FETCH POSTS";
+export const RECEIVE_POSTS = "[QUESTION] RECEIVE POSTS";
+
+export interface NewQuestionState {
+    newTitle: string;
+    newText: string;
+    currentTag: Tag;
+    selectedTags: Tag[];
+}
 
 export interface QuestionsState {
     questions: Question[];
-    newTitle: string;
-    newText: string;
-    newAnswer: string;
-    currentTag: Tag;
-    selectedTags: Tag[];
+    newQuestion: NewQuestionState;
+    newAnswerText: string;
+    isFetching: boolean;
+    lastFetch: Date|undefined; // Will be used to prevent unnecessary reloading
 }
 
 export class NewPostAction implements UndoableCommand{
     type: typeof NEW_POST = NEW_POST;
 
-    postAuthor: User;
+    readonly data: Question;
+    readonly status: 'succeeded' | 'failed';
 
-    constructor(postAuthor: User) {
-        this.postAuthor = postAuthor;
+    constructor(data: Question, status: 'succeeded' | 'failed') {
+        this.data = data;
+        this.status = status;
     }
 
-    makeAntiAction(state: AppState, id: number): DeleteQuestionAction {
-        return new DeleteQuestionAction(id)
+    makeAntiAction(state: AppState): DeleteQuestionAction {
+        return new DeleteQuestionAction(this.data.id)
     }
 }
 
@@ -110,10 +120,9 @@ export class DeleteQuestionAction implements UndoableCommand{
     }
 
     makeAntiAction(state: AppState, ...args: any[]): NewPostAction{
-        return new NewPostAction(state.userState.currentUser as User)
+        let question = state.questionState.questions.find(q => q.id === this.questionId) as Question;
+        return new NewPostAction(question, "succeeded")
     }
-
-
 }
 
 export class DeleteAnswerAction implements UndoableCommand {
@@ -142,6 +151,17 @@ export class DeleteAnswerAction implements UndoableCommand {
     }
 }
 
+export interface RequestPostsAction extends Command{
+    type: typeof REQUEST_POSTS;
+
+}
+
+export interface ReceivePostsAction extends Command{
+    type: typeof RECEIVE_POSTS;
+    data: Question[];
+    status: 'succeeded' | 'failed'
+}
+
 export type QuestionActions = NewPostAction
                             | SetCurrentTagAction
                             | SetNewPostFieldAction
@@ -153,4 +173,6 @@ export type QuestionActions = NewPostAction
                             | DeleteQuestionAction
                             | DeleteAnswerAction
                             | UpdateAnswerAction
-                            | UpdateQuestionAction;
+                            | UpdateQuestionAction
+                            | RequestPostsAction
+                            | ReceivePostsAction;

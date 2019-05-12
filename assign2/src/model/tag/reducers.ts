@@ -1,24 +1,43 @@
-import {CREATE_NEW_TAG, EDIT_NEW_TAG_NAME, TagAction, TagState} from "./types";
+import {CREATE_NEW_TAG, DELETE_TAG, EDIT_NEW_TAG_NAME, RECEIVE_TAGS, REQUEST_TAGS, TagAction, TagState} from "./types";
 import * as Data from "../SeedData";
 import Tag from "../objects/Tag";
 
 const initialState: TagState = {
     tags: Data.tags,
-    newTagName: ""
+    newTagName: "",
+    isFetching: false
 };
 
 export function tagReducer(state: TagState = initialState, action: TagAction): TagState {
     switch (action.type) {
+        case DELETE_TAG:
+            return {
+                ...state,
+                tags: state.tags.filter(t => t.id !== action.id)
+            };
+        case REQUEST_TAGS:
+            return {
+                ...state,
+                isFetching: true
+            };
+        case RECEIVE_TAGS:
+            return {
+                ...state,
+                isFetching: false,
+                tags: action.status === 'succeeded' ?
+                    action.data : state.tags
+            };
         case CREATE_NEW_TAG:
             return {
                 ...state,
-                tags: [...state.tags, new Tag(state.newTagName)]
+                tags: [...state.tags, new Tag(action.name, action.id)]
             };
-            case EDIT_NEW_TAG_NAME:
-                return {
-                    ...state,
-                    newTagName: action.newName
-                };
+        case EDIT_NEW_TAG_NAME:
+            return {
+                ...state,
+                newTagName: action.newName
+            };
+
         default:
             return state;
     }

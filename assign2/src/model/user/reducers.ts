@@ -1,19 +1,44 @@
-import {ADD_VOTE, LOGIN_USER, UserActions, UsersState} from "./types";
+import {ADD_VOTE, LOGIN_USER, RECEIVE_DETAILS, REQUEST_DETAILS, UserActions, UsersState} from "./types";
 import * as Data from '../SeedData'
 import {Vote} from "../objects/Vote";
+import User from "../objects/User";
 
 const initialState: UsersState = {
-    currentUser: Data.users[0],
+    currentUser: {
+        ...Data.users[0],
+        password: "dhas9d8hdq2de"
+    },
     users: Data.users,
-    userVotes: []
+    userVotes: [],
+    isFetching: false
 };
 
 export function userReducer(state: UsersState = initialState, action: UserActions): UsersState {
     switch (action.type) {
-        case LOGIN_USER:
+        case REQUEST_DETAILS:
+            return {
+                  ...state,
+                isFetching: true
+            };
+        case RECEIVE_DETAILS:
             return {
                 ...state,
-                currentUser: state.users.find(u => u.name === action.userName)
+                isFetching: false,
+                currentUser: action.status === 'succeeded' && state.currentUser ? {
+                    ...state.currentUser,
+                    id: action.data.id
+                } : state.currentUser,
+                userVotes: action.status === 'succeeded' ?
+                    action.data.votes.map(v => new Vote(v.postId, v.direction)) : state.userVotes
+            };
+        case LOGIN_USER:
+            let foundUser = state.users.find(u => u.name === action.userName);
+            return {
+                ...state,
+                currentUser: foundUser ? {
+                    ...foundUser,
+                    password: action.password
+                } : undefined
             };
 
         case ADD_VOTE:
