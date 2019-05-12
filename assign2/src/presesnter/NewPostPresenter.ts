@@ -3,15 +3,18 @@ import {
     doClearNewPostData,
     doNewPost,
     doSetCurrentTag,
-    doSetNewField
+    doSetNewField, sendNewPost
 } from "../model/question/actions";
 import {Dispatch} from "redux";
 import User from "../model/objects/User";
 import Tag from "../model/objects/Tag";
 import {NewPostField} from "../model/question/types";
-import {doCreateNewTag, doEditNewTagName} from "../model/tag/actions";
+import {doCreateNewTag, doEditNewTagName, sendNewTag} from "../model/tag/actions";
+import {ThunkDispatch} from "redux-thunk";
+import {AppState} from "../model/Model";
+import {Command} from "../model/command/types";
 
-export const newPostPresenter = (dispatch: Dispatch) =>
+export const newPostPresenter = (dispatch: ThunkDispatch<AppState, undefined, Command>) =>
     ({
         handleInputChange: (field: NewPostField, value: string) => {
             dispatch(doSetNewField(field, value));
@@ -21,16 +24,15 @@ export const newPostPresenter = (dispatch: Dispatch) =>
             dispatch(doClearNewPostData());
         },
 
-        handleCreatePost: (author?: User) => {
-            //FIXME Where to handle this?
+        handleCreatePost: (author?: User| undefined) => {
             if (author) {
-                dispatch(doNewPost(author));
+                dispatch(sendNewPost());
                 dispatch(doClearNewPostData());
             }
         },
 
         handleCreateNewTag: () =>
-            dispatch(doCreateNewTag()),
+            dispatch(sendNewTag()),
 
         handleChangeNewTagName: (newName: string) =>
             dispatch(doEditNewTagName(newName)),
