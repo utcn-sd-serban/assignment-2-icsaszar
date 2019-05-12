@@ -2,19 +2,21 @@ import User from "../objects/User";
 import Question from "../objects/Question";
 import Tag from "../objects/Tag";
 import Answer from "../objects/Answer";
+import {Command, UndoableCommand} from "../command/types";
+import {AppState} from "../Model";
 
-export const NEW_POST = "NEW_POST";
-export const SET_NEW_POST_FIELD = "SET_NEW_POST_FIELD";
-export const SET_CURRENT_TAG = "SET_CURRENT_TAG";
-export const ADD_TAG_TO_SELECTED_TAGS = "ADD_TAG_TO_SELECTED_TAGS";
-export const CLEAR_NEW_POST_DATA = "CLEAR_NEW_POST_DATA";
-export const ADD_ANSWER_TO_QUESTION = "ADD_ANSWER_TO_QUESTION";
-export const EDIT_QUESTION = "EDIT_QUESTION";
-export const EDIT_ANSWER = "EDIT_ANSWER";
-export const DELETE_QUESTION = "DELETE_QUESTION";
-export const DELETE_ANSWER = "DELETE_ANSWER";
-export const UPDATE_QUESTION = "UPDATE_QUESTION";
-export const UPDATE_ANSWER = "UPDATE_ANSWER";
+export const NEW_POST = "[QUESTION] NEW_POST";
+export const SET_NEW_POST_FIELD = "[QUESTION] SET NEW POST FIELD";
+export const SET_CURRENT_TAG = "[QUESTION] SET CURRENT TAG";
+export const ADD_TAG_TO_SELECTED_TAGS = "[QUESTION] ADD TAG TO SELECTED TAGS";
+export const CLEAR_NEW_POST_DATA = "[QUESTION] CLEAR NEW POST DATA";
+export const ADD_ANSWER_TO_QUESTION = "[QUESTION] ADD ANSWER TO QUESTION";
+export const EDIT_QUESTION = "[QUESTION] EDIT QUESTION";
+export const EDIT_ANSWER = "[QUESTION] EDIT ANSWER";
+export const DELETE_QUESTION = "[QUESTION] DELETE QUESTION";
+export const DELETE_ANSWER = "[QUESTION] DELETE ANSWER";
+export const SAVE_UPDATED_QUESTION = "[QUESTION] SAVE UPDATED QUESTION";
+export const SAVE_UPDATED_ANSWER = "[QUESTION] SAVE UPDATED ANSWER";
 
 export interface QuestionsState {
     questions: Question[];
@@ -25,68 +27,119 @@ export interface QuestionsState {
     selectedTags: Tag[];
 }
 
-interface NewPostAction {
-    type: typeof NEW_POST
-    postAuthor: User
+export class NewPostAction implements UndoableCommand{
+    type: typeof NEW_POST = NEW_POST;
+
+    postAuthor: User;
+
+    constructor(postAuthor: User) {
+        this.postAuthor = postAuthor;
+    }
+
+    makeAntiAction(state: AppState, id: number): DeleteQuestionAction {
+        return new DeleteQuestionAction(id)
+    }
 }
 
 export type NewPostField = "title" | "text" | "answer";
 
-interface SetNewPostFieldAction {
+export interface SetNewPostFieldAction extends Command{
     type: typeof SET_NEW_POST_FIELD
     field: NewPostField
     value: string
 }
 
-interface SetCurrentTagAction {
+export interface SetCurrentTagAction extends Command{
     type: typeof SET_CURRENT_TAG
     currentTag: Tag
 }
 
-interface AddTagToSelectedTagsAction {
+export interface AddTagToSelectedTagsAction extends Command{
     type: typeof ADD_TAG_TO_SELECTED_TAGS
 }
 
-interface ClearNewPostDataAction {
+export interface ClearNewPostDataAction extends Command{
     type: typeof CLEAR_NEW_POST_DATA
 }
 
-interface AddAnswerAction {
-    type: typeof ADD_ANSWER_TO_QUESTION
-    targetQuestionId: number
-    answerAuthor: User
+export class AddAnswerAction implements UndoableCommand{
+    type: typeof ADD_ANSWER_TO_QUESTION = ADD_ANSWER_TO_QUESTION;
+
+    targetQuestionId: number;
+    answerAuthor: User;
+
+    constructor(targetQuestionId: number, answerAuthor: User) {
+        this.targetQuestionId = targetQuestionId;
+        this.answerAuthor = answerAuthor;
+    }
+
+    makeAntiAction(state: AppState, answerId: number): DeleteAnswerAction{
+        return new DeleteAnswerAction(answerId)
+    }
 }
 
-interface EditQuestionAction {
+export interface EditQuestionAction extends Command{
     type: typeof EDIT_QUESTION
     questionId: number
     newText: string
 }
 
-interface EditAnswerAction {
+export interface EditAnswerAction extends Command{
     type: typeof EDIT_ANSWER
     answerId: number
     newText: string
 }
 
-interface UpdateQuestionAction {
-    type: typeof UPDATE_QUESTION
+export interface UpdateQuestionAction extends Command{
+    type: typeof SAVE_UPDATED_QUESTION
     questionId: number
 }
 
-interface UpdateAnswerAction {
-    type: typeof UPDATE_ANSWER
+export interface UpdateAnswerAction extends Command{
+    type: typeof SAVE_UPDATED_ANSWER
     answerId: number
 }
 
-interface DeleteQuestionAction {
-    type: typeof DELETE_QUESTION
-    questionId: number
+export class DeleteQuestionAction implements UndoableCommand{
+    type: typeof DELETE_QUESTION = DELETE_QUESTION;
+
+    questionId: number;
+
+    constructor(questionId: number) {
+        this.questionId = questionId;
+    }
+
+    makeAntiAction(state: AppState, ...args: any[]): NewPostAction{
+        return new NewPostAction(state.userState.currentUser as User)
+    }
+
+
 }
 
-interface DeleteAnswerAction {
-    type: typeof DELETE_ANSWER
-    answerId: number
+export class DeleteAnswerAction implements UndoableCommand {
+    type: typeof DELETE_ANSWER = DELETE_ANSWER;
+
+    answerId: number;
+
+    constructor(answerId: number) {
+        this.answerId = answerId;
+    }
+
+    makeAntiAction(state: AppState, ...args: any[]): AddAnswerAction {
+        function findAnswer(appState: AppState, answerId: number): {answer: Answer, questionId: number} | undefined {
+            for(let q of appState.questionState.questions){
+                let answer = q.answers.find(a => a.id === answerId);
+                if(answer)
+                    return {
+                        answer: answer,
+                        questionId: q.id
+                    }
+            }
+        }
+        // Simplest way to assert that the answer will always be found
+        let {answer: {author}, questionId} = findAnswer(state, this.answerId) as {answer: Answer, questionId: number};
+        return new AddAnswerAction(questionId, author)
+    }
 }
 
 export type QuestionActions = NewPostAction
