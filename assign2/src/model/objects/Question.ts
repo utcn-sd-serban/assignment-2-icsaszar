@@ -4,9 +4,9 @@ import User from "./User";
 import Tag from "./Tag";
 
 class Question extends Post {
-    title: string;
-    answers: Answer[];
-    tags: Tag[];
+    readonly title: string;
+    readonly answers: Answer[];
+    readonly tags: Tag[];
 
     constructor(
         title: string = "",
@@ -49,6 +49,17 @@ class Question extends Post {
         }): Question {
         return new Question(title, text, author, tags, id, answers, posted, tempText, score)
     }
+
+    static toDTO(question: Question): QuestionDTO{
+        return {
+            author: question.author,
+            tags: question.tags,
+            text: question.text,
+            title: question.title
+        }
+    }
 }
 
 export default Question;
+
+export type QuestionDTO = Pick<Question, 'title' | 'text' | 'author' | 'tags'>

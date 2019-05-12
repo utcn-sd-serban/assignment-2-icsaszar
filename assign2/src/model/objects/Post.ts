@@ -1,13 +1,12 @@
 import User from './User';
 
 abstract class Post{
-    text: string;
-    author: User;
-    posted: Date;
-    id: number;
-    tempText: string;
-    score: number;
-
+    readonly text: string;
+    readonly author: User;
+    readonly posted: Date;
+    readonly id: number;
+    readonly tempText: string;
+    readonly score: number;
 
     protected constructor(
         id: number = 0,

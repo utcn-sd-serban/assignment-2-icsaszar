@@ -1,6 +1,6 @@
 class Tag {
-    name: string = "";
-    id: number = 0;
+    readonly name: string = "";
+    readonly id: number = 0;
 
     constructor(name: string = "", id: number = 0){
         this.name = name;

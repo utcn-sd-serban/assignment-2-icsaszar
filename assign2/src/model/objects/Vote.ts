@@ -1,14 +1,16 @@
-import Post from "./Post";
-
 export type VoteDirection = "up" | "down";
 
 export class Vote {
-    postId: number;
-    direction: VoteDirection;
+    readonly postId: number;
+    readonly direction: VoteDirection;
 
-    constructor(postId: number, direction: VoteDirection) {
+    constructor(postId: number, direction: VoteDirection | number) {
         this.postId = postId;
-        this.direction = direction;
+        if(typeof direction === 'object')
+            this.direction = direction;
+        else
+            this.direction = (direction === 1) ? "up" : "down";
+
     }
 
     static clone(
@@ -17,7 +19,7 @@ export class Vote {
             direction
         }: {
             postId: number,
-            direction: VoteDirection
+            direction: VoteDirection | number
         }){
         return new Vote(postId, direction);
     }
