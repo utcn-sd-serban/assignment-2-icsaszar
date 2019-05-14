@@ -1,7 +1,7 @@
 import {QuestionDTO} from "../model/objects/Question";
+import {AnswerDTO} from "../model/objects/Answer";
 
-
-type ResponseData = {
+export type ResponseData = {
     status: 'succeeded'
     data: Response
 } | {status: 'failed'}
@@ -19,6 +19,11 @@ function onFailure(err: any): ResponseData{
     }
 }
 
+interface HttpRequest {
+    info: RequestInfo;
+    init: RequestInit;
+}
+
 export default class RestClient {
     readonly username: string;
     readonly password: string;
@@ -26,25 +31,40 @@ export default class RestClient {
 
     static readonly BASE_URL: string = "http://localhost:8080/";
 
-    private makeRequest(path: String, method: 'GET' | 'POST' | 'PUT' | 'DELETE'){
+    private createRequest(path: String, method: 'GET' | 'POST' | 'PUT' | 'DELETE'): HttpRequest{
         return {
             info: RestClient.BASE_URL + path,
             init: {
                 method: method,
                 headers: {
-                    'Authorization': this.authorization,
+                    Authorization: this.authorization,
                     'Content-Type': "application/json"
                 }
             }
         }
     }
 
-    private makeGetRequest(path: string) {
-        return this.makeRequest(path, 'GET')
+    private createGetRequest(path: string) {
+        return this.createRequest(path, 'GET')
     }
 
-    private makePostRequest<T>(path: string, body: T) {
-        let req = this.makeRequest(path, 'POST');
+    private createPostRequest<T>(path: string, body: T) {
+        let req = this.createRequest(path, 'POST');
+        return {
+            ...req,
+            init: {
+                ...req.init,
+                body: (typeof body === 'string') ? body : JSON.stringify(body)
+            }
+        }
+    }
+
+    private createDeleteRequest(path: string) {
+        return this.createRequest(path, "DELETE")
+    }
+
+    private createPutRequest<T>(path: string, body: T){
+        let req = this.createRequest(path, 'PUT');
         return {
             ...req,
             init: {
@@ -61,43 +81,54 @@ export default class RestClient {
         this.authorization = `Basic ${btoa(nameAndPass)}`
     }
 
-    loadPosts(): Promise<ResponseData>{
-        let {info, init} = this.makeGetRequest("posts");
-        return fetch(info, init).then(
-                onSuccess,
-                onFailure)
+    private static async makeAsyncRequest(info: RequestInfo, init: RequestInit){
+        try {
+            const response = await fetch(info, init);
+            return onSuccess(response);
+        } catch (err) {
+            return onFailure(err);
+        }
     }
 
-    loadUserDetails(): Promise<ResponseData>{
-        let {info, init} = this.makeGetRequest("account/details");
-        return fetch(info, init).then(
-            onSuccess,
-            onFailure
-        )
+    async loadPosts(): Promise<ResponseData> {
+        let {info, init} = this.createGetRequest("posts");
+        return RestClient.makeAsyncRequest(info, init);
     }
 
-    loadTags(): Promise<ResponseData>{
-        let {info, init} = this.makeGetRequest("tags");
-        return fetch(info, init).then(
-            onSuccess,
-            onFailure
-        )
+    async loadUserDetails(): Promise<ResponseData> {
+        let {info, init} = this.createGetRequest("account/details");
+        return RestClient.makeAsyncRequest(info, init);
     }
 
-    sendNewPost(newPost: QuestionDTO): Promise<ResponseData>{
-        let {info, init} = this.makePostRequest("posts", newPost);
-        return  fetch(info, init).then(
-            onSuccess,
-            onFailure
-        )
+    async loadTags(): Promise<ResponseData> {
+        let {info, init} = this.createGetRequest("tags");
+        return RestClient.makeAsyncRequest(info, init);
     }
 
-    sendNewTag(newTag: string): Promise<ResponseData>{
-        let {info, init} = this.makePostRequest("tags", newTag);
-        return  fetch(info, init).then(
-            onSuccess,
-            onFailure
-        )
+    async sendNewPost(newPost: QuestionDTO): Promise<ResponseData> {
+        let {info, init} = this.createPostRequest("posts", newPost);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async sendNewAnswer(newAnswer: AnswerDTO): Promise<ResponseData> {
+        let {postId} = newAnswer;
+        let {info, init} = this.createPostRequest(`posts\\${postId}\\answers`, newAnswer);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async sendNewTag(newTag: string): Promise<ResponseData> {
+        let {info, init} = this.createPostRequest("tags", newTag);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async deletePost(id: number): Promise<ResponseData> {
+        let {info, init} = this.createDeleteRequest(`posts\\${id}`);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async deleteAnswer(postId: number, answerId: number): Promise<ResponseData> {
+        let {info, init} = this.createDeleteRequest(`posts\\${postId}\\answers\\${answerId}`);
+        return RestClient.makeAsyncRequest(info, init);
     }
 }
 
