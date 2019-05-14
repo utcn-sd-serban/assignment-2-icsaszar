@@ -24,8 +24,7 @@ export function tagReducer(state: TagState = initialState, action: TagAction): T
             return {
                 ...state,
                 isFetching: false,
-                tags: action.status === 'succeeded' ?
-                    action.data : state.tags
+                tags: action.data
             };
         case CREATE_NEW_TAG:
             return {

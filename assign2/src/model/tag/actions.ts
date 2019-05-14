@@ -27,43 +27,48 @@ export function doRequestTags(): RequestTagsAction {
     }
 }
 
-export function doReceiveTags(data: Tag[], status: 'succeeded' | 'failed'): ReceiveTagsAction {
+export function doReceiveTags(data: Tag[]): ReceiveTagsAction {
     return {
         type: RECEIVE_TAGS,
-        data: data,
-        status: status
+        data: data
     }
 }
 
 type ThunkResult<R> = ThunkAction<R, AppState, undefined, Command>;
 
-export function fetchTags(): ThunkResult<void>{
-    return function (dispatch, getState) {
+export function fetchTags(): ThunkResult<Promise<void>> {
+    return async function (dispatch, getState) {
         let {userState: {currentUser}} = getState();
-        if(currentUser){
+        if (currentUser) {
             dispatch(doRequestTags());
             let restClient = new RestClient(currentUser.name, currentUser.password);
-            return restClient.loadTags().then(
-                response => {
-                    if (response.status === 'succeeded')
-                        response.data.json().then(data =>
-                            dispatch(doReceiveTags(data, response.status)))
-                })
+            try {
+                let response = await restClient.loadTags();
+                if (response.status === 'succeeded'){
+                    let data: Tag[] = await response.data.json();
+                    dispatch(doReceiveTags(data))
+                }
+            }catch (err) {
+                console.log(err)
+            }
         }
     }
 }
 
-export function sendNewTag(): ThunkResult<void>{
-    return function (dispatch, getState) {
+export function sendNewTag(): ThunkResult<Promise<void>> {
+    return async function (dispatch, getState) {
         let {userState: {currentUser}, tagState: {newTagName}} = getState();
-        if(currentUser){
+        if (currentUser) {
             let restClient = new RestClient(currentUser.name, currentUser.password);
-            return restClient.sendNewTag(newTagName).then(
-                response => {
-                    if (response.status === 'succeeded')
-                        response.data.json().then(data =>
-                            dispatch(doCreateNewTag(data.name, data.id)))
-                })
+            try {
+                let response = await restClient.sendNewTag(newTagName);
+                if (response.status === 'succeeded') {
+                    let data: Tag = await response.data.json();
+                    dispatch(doCreateNewTag(data.name, data.id));
+                }
+            } catch (err) {
+                console.log(err)
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 import {
-    ADD_VOTE,
     AddVoteAction,
     LOGIN_USER,
     RECEIVE_DETAILS,
@@ -8,12 +7,9 @@ import {
     UserActions
 } from "./types";
 import {Vote, VoteDirection} from "../objects/Vote";
-import User from "../objects/User";
-import {RequestPostsAction} from "../question/types";
 import {ThunkAction} from "redux-thunk";
 import {AppState} from "../Model";
 import {Command} from "../command/types";
-import {doReceivePosts, doRequestPosts} from "../question/actions";
 import RestClient from "../../rest/RestClient";
 
 

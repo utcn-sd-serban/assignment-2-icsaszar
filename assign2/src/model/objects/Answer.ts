@@ -33,3 +33,8 @@ class Answer extends Post {
 }
 
 export default Answer;
+
+export interface AnswerDTO {
+    postId: number;
+    text: string;
+}

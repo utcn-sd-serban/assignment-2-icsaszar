@@ -25,7 +25,6 @@ interface LoginUserAction extends Command{
 export class AddVoteAction implements UndoableCommand{
     type: typeof ADD_VOTE = ADD_VOTE;
 
-
     postId: number;
     direction: VoteDirection;
     postAuthorId: number;
@@ -58,7 +57,7 @@ export class RemoveVoteAction implements UndoableCommand{
         }
 
         function findPostAuthorId(state: AppState, postId: number){
-            for(let q of state.questionState.questions){
+            for(let q of state.questionState.postListState.questions){
                 if(q.id === postId)
                     return q.author.id;
                 for(let a of q.answers){

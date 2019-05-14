@@ -21,7 +21,6 @@ export interface RequestTagsAction extends Command{
 export interface ReceiveTagsAction extends Command{
     type: typeof RECEIVE_TAGS;
     data: Tag[];
-    status: 'succeeded' | 'failed'
 }
 
 export class CreateNewTagAction implements UndoableCommand{
