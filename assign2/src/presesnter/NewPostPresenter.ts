@@ -1,18 +1,18 @@
-import {
-    doAddTagToSelectedTags,
-    doClearNewPostData,
-    doNewPost,
-    doSetCurrentTag,
-    doSetNewField, sendNewPost
-} from "../model/question/actions";
 import {Dispatch} from "redux";
 import User from "../model/objects/User";
 import Tag from "../model/objects/Tag";
-import {NewPostField} from "../model/question/types";
 import {doCreateNewTag, doEditNewTagName, sendNewTag} from "../model/tag/actions";
 import {ThunkDispatch} from "redux-thunk";
 import {AppState} from "../model/Model";
 import {Command} from "../model/command/types";
+import {NewPostField} from "../model/question/newpost/types";
+import {
+    doAddTagToSelectedTags,
+    doClearNewPostData,
+    doSetCurrentTag,
+    doSetNewField
+} from "../model/question/newpost/actions";
+import {sendNewPost} from "../model/question/postlist/asyncActions";
 
 export const newPostPresenter = (dispatch: ThunkDispatch<AppState, undefined, Command>) =>
     ({

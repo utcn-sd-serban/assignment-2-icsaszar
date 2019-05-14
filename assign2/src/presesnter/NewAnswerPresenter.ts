@@ -1,14 +1,18 @@
-import {Dispatch} from "redux";
-import {doAddAnswer, doSetNewField} from "../model/question/actions";
 import User from "../model/objects/User";
+import {doSetNewField} from "../model/question/newpost/actions";
+import {sendAnswer} from "../model/question/postlist/asyncActions";
+import {ThunkDispatch} from "redux-thunk";
+import {AppState} from "../model/Model";
+import {Command} from "../model/command/types";
 
 
-export const newAnswerPresenter = (dispatch: Dispatch) => ({
+export const newAnswerPresenter = (dispatch: ThunkDispatch<AppState, undefined, Command>) => ({
     handleInputChange: (value: string) =>
         dispatch(doSetNewField("answer", value)),
 
     handleSubmitAnswer: (questionId: string, answerAuthor?: User) =>{
         if(answerAuthor)
-            dispatch(doAddAnswer(Number(questionId), answerAuthor))
+            //sendAnswer
+            dispatch(sendAnswer(Number(questionId)))
     }
 });

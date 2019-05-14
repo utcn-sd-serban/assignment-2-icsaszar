@@ -1,5 +1,5 @@
 import {Dispatch} from "redux";
-import {fetchPosts} from "../model/question/actions";
+import {fetchPosts} from "../model/question/postlist/asyncActions";
 import {Command} from "../model/command/types";
 import {ThunkDispatch} from "redux-thunk";
 import {AppState} from "../model/Model";

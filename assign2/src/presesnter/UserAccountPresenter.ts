@@ -6,7 +6,7 @@ import {
     doEditQuestion,
     doUpdateAnswer,
     doUpdateQuestion
-} from "../model/question/actions";
+} from "../model/question/postlist/actions";
 
 export const userAccountPresenter = (dispatch: Dispatch) => ({
     handleQuestionInputChange: (questionId: number, value: string) =>
