@@ -5,7 +5,7 @@ import {AnswerView} from "../../general/reuseable/AnswerView";
 import {QuestionView} from "../../general/reuseable/QuestionView";
 import {VotePane} from "../../general/reuseable/VotePane";
 import {VoteDirection} from "../../../model/objects/Vote";
-import {QuestionWithVotes} from "../../../model/question/selectors";
+import {QuestionWithVotes} from "../../../model/question/postlist/selectors";
 
 interface Props {
     question: QuestionWithVotes;

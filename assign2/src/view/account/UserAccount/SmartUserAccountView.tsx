@@ -3,7 +3,7 @@ import User from "../../../model/objects/User";
 import {AppState} from "../../../model/Model";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
-import {getPostsByAuthorId} from "../../../model/question/selectors";
+import {getPostsByAuthorId} from "../../../model/question/postlist/selectors";
 import {RouteComponentProps} from "react-router";
 import {getUserById} from "../../../model/user/selectors";
 import Answer from "../../../model/objects/Answer";

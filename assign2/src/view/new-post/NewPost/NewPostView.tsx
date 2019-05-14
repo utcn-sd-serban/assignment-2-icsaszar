@@ -1,7 +1,7 @@
 import React from 'react';
 import Tag from "../../../model/objects/Tag";
 import TagListView from "../../general/reuseable/TagListView";
-import {NewPostField} from "../../../model/question/types";
+import {NewPostField} from "../../../model/question/newpost/types";
 
 interface Params {
     onSubmit: () => void;

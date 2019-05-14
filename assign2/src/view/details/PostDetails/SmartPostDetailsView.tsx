@@ -1,5 +1,5 @@
 import {AppState} from "../../../model/Model";
-import {getQuestionAndAnswersWithVotes} from "../../../model/question/selectors";
+import {getQuestionAndAnswersWithVotes} from "../../../model/question/postlist/selectors";
 import Question from "../../../model/objects/Question";
 import React from "react";
 import {PostDetailsView} from "./PostDetailsView";

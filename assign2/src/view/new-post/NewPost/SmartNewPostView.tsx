@@ -6,8 +6,7 @@ import {NewPostView} from "./NewPostView";
 import Tag from "../../../model/objects/Tag";
 import {AppState} from "../../../model/Model";
 import {newPostPresenter} from "../../../presesnter/NewPostPresenter";
-import {NewPostField} from "../../../model/question/types";
-import {doCreateNewTag} from "../../../model/tag/actions";
+import {NewPostField} from "../../../model/question/newpost/types";
 import {isCurrentNewTagInTags} from "../../../model/tag/selectors";
 
 interface Props {
@@ -32,13 +31,13 @@ interface Props {
 class SmartNewPostView extends Component<Props>{
 
     render(){
-        const {newText, newTitle, tags, currentTag} = this.props;
+        const {newText, newTitle, tags, currentTag, selectedTags} = this.props;
         return (
             <NewPostView
                 text={newText}
                 title={newTitle}
                 tags={tags}
-                selectedTags={this.props.selectedTags}
+                selectedTags={selectedTags}
                 currentTag={currentTag.name}
                 newTagName={this.props.newTagName}
 
@@ -66,7 +65,6 @@ function mapDispatchToPros(dispatch: Dispatch) {
             presenter.handleAddTag(),
         onSetCurrentTag: (tags: Tag[]) => (currentTag: string) =>
             presenter.handleTagChange(currentTag, tags),
-
         onCreateNewTag: () =>
             presenter.handleCreateNewTag(),
         onEditNewTagName: (newName: string) =>
@@ -75,13 +73,11 @@ function mapDispatchToPros(dispatch: Dispatch) {
 }
 
 function mapStateToProps(state: AppState) {
+
     return {
         tags: state.tagState.tags,
         currentUser: state.userState.currentUser,
-        newTitle: state.questionState.newTitle,
-        newText: state.questionState.newText,
-        currentTag: state.questionState.currentTag,
-        selectedTags: state.questionState.selectedTags,
+        ...state.questionState.newPostState,
         newTagName: state.tagState.newTagName,
         existingTag: isCurrentNewTagInTags(state)
     }
