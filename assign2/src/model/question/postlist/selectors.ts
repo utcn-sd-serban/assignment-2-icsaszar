@@ -1,12 +1,12 @@
-import {AppState} from "../Model";
-import {QuestionFilter} from "../filter/types";
-import Post from "../objects/Post";
-import Question from "../objects/Question";
-import {VoteDirection} from "../objects/Vote";
-import Answer from "../objects/Answer";
+import {AppState} from "../../Model";
+import {QuestionFilter} from "../../filter/types";
+import Answer from "../../objects/Answer";
+import {VoteDirection} from "../../objects/Vote";
+import Question from "../../objects/Question";
+import Post from "../../objects/Post";
 
 export const getFilteredQuestions = (state: AppState) => {
-    const {questions} = state.questionState;
+    const {questions} = state.questionState.postListState;
     const {currentFilter, searchedTitle, searchedTag} = state.filterState;
 
     switch (currentFilter) {
@@ -23,7 +23,7 @@ export const getFilteredQuestions = (state: AppState) => {
 
 
 export const getCurrentQuestion = (state: AppState, currentId: string) =>
-    state.questionState.questions.find(q => q.id === Number(currentId));
+    state.questionState.postListState.questions.find(q => q.id === Number(currentId));
 
 export type AnswerWithVotes = Answer & {voted?: VoteDirection};
 
@@ -53,8 +53,8 @@ export function getQuestionAndAnswersWithVotes(state: AppState, questionId: stri
 }
 
 
-export function getPostsByAuthorId(state: AppState, authorId: number): Post[] {
-    const questions = state.questionState.questions.filter(q => q.author.id === authorId);
-    const answers = state.questionState.questions.flatMap(q => q.answers).filter(a => a.author.id === authorId);
+export function getPostsByAuthorId({questionState: {postListState}}: AppState, authorId: number): Post[] {
+    const questions = postListState.questions.filter(q => q.author.id === authorId);
+    const answers = postListState.questions.flatMap(q => q.answers).filter(a => a.author.id === authorId);
     return [...questions, ...answers]
 }
