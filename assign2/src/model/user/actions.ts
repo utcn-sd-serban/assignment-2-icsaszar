@@ -11,6 +11,8 @@ import {ThunkAction} from "redux-thunk";
 import {AppState} from "../Model";
 import {Command} from "../command/types";
 import RestClient from "../../rest/RestClient";
+import {isStale} from "../utility";
+import {useState} from "react";
 
 
 export function doLoginUser(userName: string, password: string): UserActions{
@@ -46,14 +48,16 @@ type ThunkResult<R> = ThunkAction<R, AppState, undefined, Command>;
 
 export function fetchUserDetails(): ThunkResult<Promise<void>>{
     return async function (dispatch, getState) {
-        let {userState: {currentUser}} = getState();
+        let {userState: {currentUser, lastFetched}} = getState();
         if(currentUser) {
-            dispatch(doRequestDetails());
-            let restClient = new RestClient(currentUser.name, currentUser.password);
-            let response = await restClient.loadUserDetails();
-            if (response.status === 'succeeded'){
-                let data = await response.data.json();
-                dispatch(doReceiveDetails(data))
+            if(isStale(lastFetched)){
+                dispatch(doRequestDetails());
+                let restClient = new RestClient(currentUser.name, currentUser.password);
+                let response = await restClient.loadUserDetails();
+                if (response.status === 'succeeded'){
+                    let data = await response.data.json();
+                    dispatch(doReceiveDetails(data))
+                }
             }
         }
     }

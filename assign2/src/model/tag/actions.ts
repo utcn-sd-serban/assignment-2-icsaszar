@@ -9,6 +9,7 @@ import {ThunkAction} from "redux-thunk";
 import {AppState} from "../Model";
 import {Command} from "../command/types";
 import RestClient from "../../rest/RestClient";
+import {isStale} from "../utility";
 
 export function doCreateNewTag(newTagName: string, id: number): CreateNewTagAction {
     return new CreateNewTagAction(newTagName, id)
@@ -38,18 +39,20 @@ type ThunkResult<R> = ThunkAction<R, AppState, undefined, Command>;
 
 export function fetchTags(): ThunkResult<Promise<void>> {
     return async function (dispatch, getState) {
-        let {userState: {currentUser}} = getState();
+        let {userState: {currentUser}, tagState} = getState();
         if (currentUser) {
-            dispatch(doRequestTags());
-            let restClient = new RestClient(currentUser.name, currentUser.password);
-            try {
-                let response = await restClient.loadTags();
-                if (response.status === 'succeeded'){
-                    let data: Tag[] = await response.data.json();
-                    dispatch(doReceiveTags(data))
+            if(isStale(tagState.lastFetched)){
+                dispatch(doRequestTags());
+                let restClient = new RestClient(currentUser.name, currentUser.password);
+                try {
+                    let response = await restClient.loadTags();
+                    if (response.status === 'succeeded'){
+                        let data: Tag[] = await response.data.json();
+                        dispatch(doReceiveTags(data))
+                    }
+                }catch (err) {
+                    console.log(err)
                 }
-            }catch (err) {
-                console.log(err)
             }
         }
     }

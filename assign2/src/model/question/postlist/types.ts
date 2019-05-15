@@ -49,8 +49,8 @@ export class AddAnswerAction implements UndoableCommand{
         this.targetQuestionId = targetQuestionId
     }
 
-    makeAntiAction(state: AppState, answerId: number): DeleteAnswerAction{
-        return new DeleteAnswerAction(answerId)
+    makeAntiAction(state: AppState): DeleteAnswerAction{
+        return new DeleteAnswerAction(this.data.id)
     }
 }
 

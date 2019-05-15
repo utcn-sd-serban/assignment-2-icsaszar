@@ -1,15 +1,11 @@
 import {
     ADD_ANSWER_TO_QUESTION,
-    ADD_TAG_TO_SELECTED_TAGS,
-    CLEAR_NEW_POST_DATA,
     DELETE_ANSWER,
     DELETE_QUESTION,
     EDIT_ANSWER,
     EDIT_QUESTION,
     NEW_POST,
     PostListActions,
-    SET_CURRENT_TAG,
-    SET_NEW_POST_FIELD,
     SAVE_UPDATED_ANSWER,
     SAVE_UPDATED_QUESTION,
     UpdateAnswerAction,
@@ -26,14 +22,13 @@ import {
 import Question from "../../objects/Question";
 import * as Data from '../../SeedData'
 import Answer from "../../objects/Answer";
-import {AppState} from "../../Model";
 
 
 
 const initialState: PostListState = {
     questions: Data.questions,
     isFetching: false,
-    lastFetched: new Date()
+    lastFetched: new Date(0)
 };
 
 //Splitting this would be nice...

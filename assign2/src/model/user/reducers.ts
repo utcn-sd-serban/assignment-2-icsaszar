@@ -10,7 +10,8 @@ const initialState: UsersState = {
     },
     users: Data.users,
     userVotes: [],
-    isFetching: false
+    isFetching: false,
+    lastFetched: new Date(0)
 };
 
 export function userReducer(state: UsersState = initialState, action: UserActions): UsersState {
@@ -24,6 +25,7 @@ export function userReducer(state: UsersState = initialState, action: UserAction
             return {
                 ...state,
                 isFetching: false,
+                lastFetched: new Date(),
                 currentUser: state.currentUser ? {
                     ...state.currentUser,
                     id: action.data.id

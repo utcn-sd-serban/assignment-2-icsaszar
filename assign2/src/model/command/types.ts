@@ -9,7 +9,7 @@ export interface Command {
 }
 
 export interface UndoableCommand extends Command{
-    makeAntiAction: (state: AppState, ...args: any[]) => UndoableCommand;
+    makeAntiAction: (state: AppState) => UndoableCommand;
 }
 
 export interface ActionPair{

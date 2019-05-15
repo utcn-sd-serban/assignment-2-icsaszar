@@ -5,7 +5,8 @@ import Tag from "../objects/Tag";
 const initialState: TagState = {
     tags: Data.tags,
     newTagName: "",
-    isFetching: false
+    isFetching: false,
+    lastFetched: new Date(0)
 };
 
 export function tagReducer(state: TagState = initialState, action: TagAction): TagState {
@@ -24,6 +25,7 @@ export function tagReducer(state: TagState = initialState, action: TagAction): T
             return {
                 ...state,
                 isFetching: false,
+                lastFetched: new Date(),
                 tags: action.data
             };
         case CREATE_NEW_TAG:

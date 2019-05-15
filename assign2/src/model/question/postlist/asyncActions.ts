@@ -5,23 +5,26 @@ import RestClient, {ResponseData} from "../../../rest/RestClient";
 import Question, {QuestionDTO} from "../../objects/Question";
 import {doAddAnswer, doNewPost, doReceivePosts, doRequestPosts} from "./actions";
 import Answer, {AnswerDTO} from "../../objects/Answer";
+import {isStale} from "../../utility";
 
 type ThunkResult<R> = ThunkAction<R, AppState, undefined, Command>;
 
 export function fetchPosts(): ThunkResult<Promise<void>>{
     return async (dispatch, getState) => {
-        let {userState: {currentUser}} = getState();
+        let {userState: {currentUser}, questionState: {postListState}} = getState();
         if(currentUser){
-            dispatch(doRequestPosts());
-            let restClient = new RestClient(currentUser.name, currentUser.password);
-            try {
-                let response = await restClient.loadPosts();
-                if (response.status === 'succeeded'){
-                    let data = await response.data.json();
-                    dispatch(doReceivePosts(data));
+            if(isStale(postListState.lastFetched)){
+                dispatch(doRequestPosts());
+                let restClient = new RestClient(currentUser.name, currentUser.password);
+                try {
+                    let response = await restClient.loadPosts();
+                    if (response.status === 'succeeded'){
+                        let data = await response.data.json();
+                        dispatch(doReceivePosts(data));
+                    }
+                }catch (err) {
+                    console.log(err)
                 }
-            }catch (err) {
-                console.log(err)
             }
         }
     }

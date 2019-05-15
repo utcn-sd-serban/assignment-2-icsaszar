@@ -14,6 +14,7 @@ export interface UsersState {
     users: User[];
     userVotes: Vote[];
     isFetching: boolean;
+    lastFetched: Date;
 }
 
 interface LoginUserAction extends Command{

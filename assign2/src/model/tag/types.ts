@@ -12,6 +12,7 @@ export interface TagState {
     tags: Tag[];
     newTagName: string;
     isFetching: boolean;
+    lastFetched: Date;
 }
 
 export interface RequestTagsAction extends Command{

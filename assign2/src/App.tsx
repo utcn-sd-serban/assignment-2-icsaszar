@@ -8,6 +8,7 @@ import SmartHeader from "./view/general/Header/SmartHeader";
 import SmartUserAccountView from "./view/account/UserAccount/SmartUserAccountView";
 
 export default class App extends Component{
+    //TODO move fetch here
     render() {
         return (
             <HashRouter>
