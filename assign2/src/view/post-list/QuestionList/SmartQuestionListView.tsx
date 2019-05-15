@@ -2,7 +2,7 @@ import {connect} from "react-redux";
 import QuestionListView from "./QuestionListView";
 import {AppState} from "../../../model/Model";
 import {getFilteredQuestions} from "../../../model/question/postlist/selectors";
-import {Component} from "react";
+import {Component, FunctionComponent, PureComponent} from "react";
 import {questionListPresenter} from "../../../presesnter/QuestionListPresenter";
 import Question from "../../../model/objects/Question";
 import * as React from "react";
