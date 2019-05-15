@@ -72,10 +72,9 @@ export function doRequestPosts(): RequestPostsAction {
     };
 }
 
-export function doReceivePosts(data: Question[], status: 'succeeded' | 'failed'): ReceivePostsAction {
+export function doReceivePosts(data: Question[]): ReceivePostsAction {
     return {
         type: RECEIVE_POSTS,
-        data: data,
-        status: status
+        data: data
     };
 }

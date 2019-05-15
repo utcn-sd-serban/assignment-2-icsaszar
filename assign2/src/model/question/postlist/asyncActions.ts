@@ -18,7 +18,7 @@ export function fetchPosts(): ThunkResult<Promise<void>>{
                 let response = await restClient.loadPosts();
                 if (response.status === 'succeeded'){
                     let data = await response.data.json();
-                    dispatch(doReceivePosts(data, response.status));
+                    dispatch(doReceivePosts(data));
                 }
             }catch (err) {
                 console.log(err)
@@ -69,7 +69,7 @@ export function sendAnswer(postId: number): ThunkResult<Promise<void>> {
                 let response = await restClient.sendNewAnswer(ansDTO);
                 if (response.status === 'succeeded'){
                     let data: Answer = await response.data.json();
-                    dispatch(doAddAnswer(Answer.clone({
+                    dispatch(doAddAnswer(Answer.fromObject({
                         ...data,
                         posted: new Date(data.posted)
                     }), postId));

@@ -35,29 +35,26 @@ export function doRequestDetails(): RequestUserDetailsAction {
     };
 }
 
-export function doReceiveDetails(data: {id: number, votes: Vote[]}, status: 'succeeded' | 'failed'): ReceiveUserDetailsAction {
+export function doReceiveDetails(data: {id: number, votes: Vote[]}): ReceiveUserDetailsAction {
     return {
         type: RECEIVE_DETAILS,
-        status: status,
         data: data
     };
 }
 
 type ThunkResult<R> = ThunkAction<R, AppState, undefined, Command>;
 
-export function fetchUserDetails(): ThunkResult<void>{
-    return function (dispatch, getState) {
+export function fetchUserDetails(): ThunkResult<Promise<void>>{
+    return async function (dispatch, getState) {
         let {userState: {currentUser}} = getState();
         if(currentUser) {
             dispatch(doRequestDetails());
             let restClient = new RestClient(currentUser.name, currentUser.password);
-            return restClient.loadUserDetails().then(
-                response => {
-                    if (response.status === 'succeeded')
-                        response.data.json().then(data =>
-                            dispatch(doReceiveDetails(data, response.status)))
-
-                })
+            let response = await restClient.loadUserDetails();
+            if (response.status === 'succeeded'){
+                let data = await response.data.json();
+                dispatch(doReceiveDetails(data))
+            }
         }
     }
 }

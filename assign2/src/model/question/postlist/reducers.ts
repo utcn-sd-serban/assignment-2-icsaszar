@@ -33,7 +33,7 @@ import {AppState} from "../../Model";
 const initialState: PostListState = {
     questions: Data.questions,
     isFetching: false,
-    lastFetch: undefined
+    lastFetched: new Date()
 };
 
 //Splitting this would be nice...
@@ -46,7 +46,7 @@ export function postListReducer(state: PostListState = initialState, action: Pos
         case SAVE_UPDATED_ANSWER:
             return saveUpdatedAnswer(state, action);
         case SAVE_UPDATED_QUESTION:
-            return saveUpdatedQuestions(state, action);
+            return saveUpdatedQuestion(state, action);
         case EDIT_QUESTION:
             return editQuestion(state, action);
         case EDIT_ANSWER:
@@ -64,92 +64,81 @@ export function postListReducer(state: PostListState = initialState, action: Pos
     }
 }
 
-function fetchPosts(state: PostListState) {
+function fetchPosts(state: PostListState): PostListState {
     return {
         ...state,
         isFetching: true
     };
 }
 
-function receivePosts(state: PostListState, action: ReceivePostsAction) {
+function receivePosts(state: PostListState, action: ReceivePostsAction): PostListState {
     return {
         ...state,
         isFetching: false,
-        questions: action.status === 'succeeded' ?
-            action.data.map(
-            q => Question.clone({
-                ...q,
-                posted: new Date(q.posted),
-                answers: q.answers.map(a =>
-                    Answer.clone({
-                        ...a,
-                        posted: new Date(a.posted)
-                    })
-                )
-            })
-        ) : state.questions
+        lastFetched: new Date(),
+        questions: action.data.map(Question.fromJSON)
     };
 }
 
-function saveUpdatedAnswer(state: PostListState, action: UpdateAnswerAction) {
+function saveUpdatedAnswer(state: PostListState, action: UpdateAnswerAction): PostListState {
     return {
         ...state,
         questions: state.questions.map(q =>
-            Question.clone(
+            Question.fromObject(
                 {
                     ...q,
                     answers: q.answers.map(a =>
-                        (a.id === action.answerId) ? Answer.clone({...a, text: a.tempText}) : a
+                        (a.id === action.answerId) ? Answer.fromObject({...a, text: a.tempText}) : a
                     )
                 }
             ))
     };
 }
 
-function saveUpdatedQuestions(state: PostListState, action: UpdateQuestionAction) {
+function saveUpdatedQuestion(state: PostListState, action: UpdateQuestionAction): PostListState {
     return {
         ...state,
         questions: state.questions.map(q =>
-            q.id === action.questionId ? Question.clone({...q, text: q.tempText}) : q
+            q.id === action.questionId ? Question.fromObject({...q, text: q.tempText}) : q
         )
     };
 }
 
-function editQuestion(state: PostListState, action: EditQuestionAction) {
+function editQuestion(state: PostListState, action: EditQuestionAction): PostListState {
     return {
         ...state,
         questions: state.questions.map(q =>
-            q.id === action.questionId ? Question.clone({...q, tempText: action.newText}) : q
+            q.id === action.questionId ? Question.fromObject({...q, tempText: action.newText}) : q
         )
     };
 }
 
-function editAnswer(state: PostListState, action: EditAnswerAction) {
+function editAnswer(state: PostListState, action: EditAnswerAction): PostListState {
     return {
         ...state,
         questions: state.questions.map(q =>
-            Question.clone({
+            Question.fromObject({
                 ...q,
                 answers: q.answers.map(a =>
-                    a.id === action.answerId ? Answer.clone({...a, tempText: action.newText}) : a
+                    a.id === action.answerId ? Answer.fromObject({...a, tempText: action.newText}) : a
                 )
             })
         )
     };
 }
 
-function deleteQuestion(state: PostListState, action: DeleteQuestionAction) {
+function deleteQuestion(state: PostListState, action: DeleteQuestionAction): PostListState {
     return {
         ...state,
         questions: state.questions.filter(q => q.id !== action.questionId)
     };
 }
 
-function deleteAnswer(state: PostListState, action: DeleteAnswerAction) {
+function deleteAnswer(state: PostListState, action: DeleteAnswerAction): PostListState {
     return {
         ...state,
         questions: state.questions.map(q =>
-            Question.clone({
+            Question.fromObject({
                 ...q,
                 answers: q.answers.filter(a => a.id !== action.answerId)
             })
@@ -157,21 +146,21 @@ function deleteAnswer(state: PostListState, action: DeleteAnswerAction) {
     };
 }
 
-function createNewPost(state: PostListState, action: AddQuestionAction){
+function createNewPost(state: PostListState, action: AddQuestionAction): PostListState{
     return {
         ...state,
         questions: [...state.questions, action.data]
     };
 }
 
-function addAnswer(state: PostListState, action: AddAnswerAction){
+function addAnswer(state: PostListState, action: AddAnswerAction): PostListState{
     const newAnswer = action.data;
     return {
         ...state,
         questions: state.questions.map(
             q => {
                 if(q.id === action.targetQuestionId)
-                    return Question.clone({...q, answers: [...q.answers, newAnswer]});
+                    return Question.fromObject({...q, answers: [...q.answers, newAnswer]});
                 else
                     return q;
                 }

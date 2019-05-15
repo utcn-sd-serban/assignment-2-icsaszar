@@ -3,7 +3,6 @@ import {
     CLEAR_NEW_POST_DATA,
     SET_CURRENT_TAG,
     SET_NEW_POST_FIELD,
-    AddTagToSelectedTagsAction,
     SetCurrentTagAction,
     SetNewPostFieldAction,
     NewPostState, NewPostActions
@@ -34,27 +33,27 @@ export function newPostReducer(state: NewPostState = initialState, action: NewPo
     }
 }
 
-function setCurrentTag(state: NewPostState, action: SetCurrentTagAction) {
+function setCurrentTag(state: NewPostState, action: SetCurrentTagAction): NewPostState {
     return {
         ...state,
         currentTag: action.currentTag
     };
 }
 
-function addTagToSelectedTags(state: NewPostState) {
+function addTagToSelectedTags(state: NewPostState): NewPostState {
     return {
         ...state,
         selectedTags: state.selectedTags.includes(state.currentTag) ? state.selectedTags : [...state.selectedTags, state.currentTag]
     };
 }
 
-function clearNewPostData(state: NewPostState) {
+function clearNewPostData(state: NewPostState): NewPostState {
     return {
         ...initialState
     };
 }
 
-function setNewPostField(state: NewPostState, action: SetNewPostFieldAction) {
+function setNewPostField(state: NewPostState, action: SetNewPostFieldAction): NewPostState {
     switch (action.field) {
         case "title":
             return {

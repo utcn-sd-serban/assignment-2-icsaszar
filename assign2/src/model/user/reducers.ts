@@ -24,12 +24,12 @@ export function userReducer(state: UsersState = initialState, action: UserAction
             return {
                 ...state,
                 isFetching: false,
-                currentUser: action.status === 'succeeded' && state.currentUser ? {
+                currentUser: state.currentUser ? {
                     ...state.currentUser,
                     id: action.data.id
                 } : state.currentUser,
-                userVotes: action.status === 'succeeded' ?
-                    action.data.votes.map(v => new Vote(v.postId, v.direction)) : state.userVotes
+                userVotes:
+                    action.data.votes.map(v => new Vote(v.postId, v.direction))
             };
         case LOGIN_USER:
             let foundUser = state.users.find(u => u.name === action.userName);
@@ -48,7 +48,7 @@ export function userReducer(state: UsersState = initialState, action: UserAction
                     userVotes:
                         state.userVotes.find(v => v.postId === action.postId)
                             ? state.userVotes.map(v =>
-                                v.postId === action.postId ? Vote.clone({...v, direction: action.direction}) : v
+                                v.postId === action.postId ? Vote.fromObject({...v, direction: action.direction}) : v
                             )
                             : [...state.userVotes, new Vote(action.postId, action.direction)]
                 };

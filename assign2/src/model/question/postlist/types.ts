@@ -1,8 +1,6 @@
 import Question from "../../objects/Question";
 import {Command, UndoableCommand} from "../../command/types";
 import {AppState} from "../../Model";
-import Tag from "../../objects/Tag";
-import User from "../../objects/User";
 import Answer from "../../objects/Answer";
 
 export const NEW_POST = "[QUESTION] NEW_POST";
@@ -23,7 +21,7 @@ export const RECEIVE_POSTS = "[QUESTION] RECEIVE POSTS";
 export interface PostListState {
     questions: Question[];
     isFetching: boolean;
-    lastFetch: Date|undefined; // Will be used to prevent unnecessary reloading
+    lastFetched: Date; // Will be used to prevent unnecessary reloading
 }
 
 export class AddQuestionAction implements UndoableCommand{
@@ -127,7 +125,6 @@ export interface RequestPostsAction extends Command{
 export interface ReceivePostsAction extends Command{
     type: typeof RECEIVE_POSTS;
     data: Question[];
-    status: 'succeeded' | 'failed'
 }
 
 export type PostListActions = AddQuestionAction

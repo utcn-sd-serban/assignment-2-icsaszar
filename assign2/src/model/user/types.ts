@@ -87,7 +87,6 @@ export interface ReceiveUserDetailsAction extends Command{
         id: number;
         votes: Vote[];
     }
-    status: 'succeeded' | 'failed';
 }
 
 export type UserActions = LoginUserAction | AddVoteAction | RequestUserDetailsAction | ReceiveUserDetailsAction;
