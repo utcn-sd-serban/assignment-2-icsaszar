@@ -12,15 +12,19 @@ export interface UndoableCommand extends Command{
     makeAntiAction: (state: AppState, ...args: any[]) => UndoableCommand;
 }
 
+export interface ActionPair{
+    action: UndoableCommand;
+    antiAction: UndoableCommand
+}
+
 export interface CommandState {
-    readonly history: [Command, Command][];
-    readonly future: [Command, Command][];
+    readonly history: ActionPair[];
+    readonly future: ActionPair[];
 }
 
 interface DoCommandAction extends Command{
     type: typeof DO_ACTION;
-    action: Command
-    antiAction: Command
+    actionPair: ActionPair
 }
 
 interface UndoCommandAction extends Command{

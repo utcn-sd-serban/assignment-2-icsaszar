@@ -15,7 +15,9 @@ export function redoAction(): CommandActions {
 export function doAction(action: UndoableCommand, antiAction: UndoableCommand): CommandActions {
     return{
         type: DO_ACTION,
-        action: action,
-        antiAction: antiAction
+        actionPair: {
+            action,
+            antiAction
+        }
     }
 }

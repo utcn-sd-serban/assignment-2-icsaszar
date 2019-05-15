@@ -33,8 +33,8 @@ export function commandReducer(state: CommandState = initialState, action: Comma
         case DO_ACTION:
             return {
                 ...state,
-                future: [],
-                history: [...state.history, [action.action, action.antiAction]]
+                history: [...state.history, action.actionPair],
+                future: [] //Future becomes invalid
             };
         default:
             return state;
