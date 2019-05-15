@@ -1,5 +1,6 @@
 import {QuestionDTO} from "../model/objects/Question";
 import {AnswerDTO} from "../model/objects/Answer";
+import {Vote} from "../model/objects/Vote";
 
 export type ResponseData = {
     status: 'succeeded'
@@ -118,6 +119,54 @@ export default class RestClient {
 
     async sendNewTag(newTag: string): Promise<ResponseData> {
         let {info, init} = this.createPostRequest("tags", newTag);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async editPost(editedPost: QuestionDTO & {id: number}): Promise<ResponseData> {
+        let {id} = editedPost;
+        let {info, init} = this.createPutRequest(`posts\\${id}`, editedPost);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async editAnswer(editedAnswer: AnswerDTO & {id: number}): Promise<ResponseData> {
+        let {id, postId} = editedAnswer;
+        let {info, init} = this.createPutRequest(`posts\\${postId}\\answers\\${id}`, editedAnswer);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async voteOnQuestion(vote: Vote): Promise<ResponseData>{
+        let {postId} = vote;
+        let {info, init} = this.createPostRequest(`posts\\${postId}\\votes`, vote);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async voteOnAnswer({vote, questionId}: {vote: Vote, questionId: number}): Promise<ResponseData>{
+        let {postId} = vote;
+        let {info, init} = this.createPutRequest(`posts\\${questionId}\\answers\\${postId}\\votes`, vote);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async changeQuestionVote(vote: Vote): Promise<ResponseData>{
+        let {postId} = vote;
+        let {info, init} = this.createPutRequest(`posts\\${postId}\\votes`, vote);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async changeAnswerVote({vote, questionId}: {vote: Vote, questionId: number}): Promise<ResponseData>{
+        let {postId} = vote;
+        let {info, init} = this.createPutRequest(`posts\\${questionId}\\answers\\${postId}\\votes`, vote);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async deleteQuestionVote(vote: Vote): Promise<ResponseData>{
+        let {postId} = vote;
+        let {info, init} = this.createDeleteRequest(`posts\\${postId}\\votes`);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    async deleteAnswerVote({vote, questionId}: {vote: Vote, questionId: number}): Promise<ResponseData>{
+        let {postId} = vote;
+        let {info, init} = this.createDeleteRequest(`posts\\${questionId}\\answers\\${postId}\\votes`);
         return RestClient.makeAsyncRequest(info, init);
     }
 
