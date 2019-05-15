@@ -3,6 +3,10 @@ import Answer from "./Answer";
 import User from "./User";
 import Tag from "./Tag";
 
+type QuestionFields = {
+    [P in keyof Question]: Question[P]
+}
+
 class Question extends Post {
     readonly title: string;
     readonly answers: Answer[];
@@ -25,7 +29,15 @@ class Question extends Post {
         this.tags = tags;
     }
 
-    static clone(
+    static fromJSON(data: QuestionFields){
+        return Question.fromObject({
+            ...data,
+            posted: new Date(data.posted),
+            answers: data.answers.map(Answer.fromJSON)
+        })
+    }
+
+    static fromObject(
         {
             title,
             text,
@@ -36,17 +48,7 @@ class Question extends Post {
             posted,
             tempText,
             score
-        }: {
-            title: string,
-            text: string,
-            author: User,
-            tags: Tag[],
-            id: number,
-            answers: Answer[],
-            posted: Date,
-            tempText: string,
-            score: number
-        }): Question {
+        }: QuestionFields): Question {
         return new Question(title, text, author, tags, id, answers, posted, tempText, score)
     }
 

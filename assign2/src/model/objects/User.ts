@@ -1,13 +1,11 @@
 class User {
-    readonly name: string = "";
-    readonly id: number = 0;
 
-    constructor(name: string = "", id: number = 0) {
-        this.name = name;
-        this.id = id;
-    }
+    constructor(
+        readonly name: string = "",
+        readonly id: number = 0
+    ) {}
 
-    static clone({name, id}: {name: string, id: number}){
+    static fromObjectt({name, id}: {name: string, id: number}){
         return new User(name, id)
     }
 }

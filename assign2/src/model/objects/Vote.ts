@@ -1,11 +1,12 @@
 export type VoteDirection = "up" | "down";
 
 export class Vote {
-    readonly postId: number;
     readonly direction: VoteDirection;
 
-    constructor(postId: number, direction: VoteDirection | number) {
-        this.postId = postId;
+    constructor(
+        readonly postId: number,
+        direction: VoteDirection | (1 | -1))
+    {
         if(typeof direction === 'object')
             this.direction = direction;
         else
@@ -13,13 +14,13 @@ export class Vote {
 
     }
 
-    static clone(
+    static fromObject(
         {
             postId,
             direction
         }: {
             postId: number,
-            direction: VoteDirection | number
+            direction: VoteDirection | (1 | -1)
         }){
         return new Vote(postId, direction);
     }

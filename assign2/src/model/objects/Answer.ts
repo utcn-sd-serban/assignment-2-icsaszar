@@ -1,6 +1,10 @@
 import Post from './Post';
 import User from "./User";
 
+type AnswerFields = {
+    [P in keyof Answer]: Answer[P]
+}
+
 class Answer extends Post {
     constructor(
         text: string = "",
@@ -11,8 +15,16 @@ class Answer extends Post {
         score: number = 0) {
         super(id, text, author, posted, tempText, score);
     }
+
+
+    static fromJSON(data: AnswerFields){
+        return Answer.fromObject({
+            ...data,
+            posted: new Date(data.posted)
+        })
+    }
     
-    static clone(
+    static fromObject(
         {
             text,
             author,
@@ -20,14 +32,7 @@ class Answer extends Post {
             posted,
             tempText,
             score
-        }: {
-            text: string,
-            author: User,
-            id: number,
-            posted: Date,
-            tempText: string,
-            score: number
-        }): Answer {
+        }: AnswerFields): Answer {
         return new Answer(text, author, id, posted, tempText, score);
     }
 }
