@@ -6,9 +6,12 @@ import {AppState} from "../../../model/Model";
 import {Header} from "./Header";
 import {Dispatch} from "redux";
 import {headerPresenter} from "../../../presesnter/HeaderPresenter";
+import {existsRedoCommand, existsUndoCommand} from "../../../model/command/selectors";
 
 interface Props{
     currentUser?: User;
+    undoPossible: boolean;
+    redoPossible: boolean;
     onUndo: () => void;
     onRedo: () => void;
 }
@@ -21,6 +24,8 @@ class SmartHeader extends React.Component<Props>{
                 currentUser={this.props.currentUser.id.toString()}
                 onUndo={this.props.onUndo}
                 onRedo={this.props.onRedo}
+                undoPossible={this.props.undoPossible}
+                redoPossible={this.props.redoPossible}
             />
         );
     }
@@ -28,7 +33,9 @@ class SmartHeader extends React.Component<Props>{
 
 function mapStateToProps(state: AppState) {
     return {
-        currentUser: state.userState.currentUser
+        currentUser: state.userState.currentUser,
+        undoPossible: existsUndoCommand(state),
+        redoPossible: existsRedoCommand(state)
     };
 }
 

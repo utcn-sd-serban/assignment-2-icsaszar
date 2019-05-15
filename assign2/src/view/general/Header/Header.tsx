@@ -5,10 +5,12 @@ import {Link} from "react-router-dom";
 interface Props {
     onUndo: () => void;
     onRedo: () => void;
+    undoPossible: boolean;
+    redoPossible: boolean;
     currentUser: string;
 }
 
-export const Header = ({currentUser, onRedo, onUndo}: Props) =>(
+export const Header = ({currentUser, onRedo, onUndo, undoPossible, redoPossible}: Props) =>(
     <nav className="navbar navbar-light bg-light navbar-expand">
         <Link className="navbar-brand" to="/">
             <img src={logo} style={{height:50, background: "transparent"}} className="d-inline-block align-top" alt=""/>
@@ -22,10 +24,10 @@ export const Header = ({currentUser, onRedo, onUndo}: Props) =>(
                 <Link to={`/users/${currentUser}`} className="nav-link"> Account</Link>
             </li>
         </ul>
-        <button className="btn btn-outline-info btn-sm mx-1" onClick={onUndo}>
+        <button className="btn btn-outline-info btn-sm mx-1" onClick={onUndo} disabled={!undoPossible}>
             Undo
         </button>
-        <button className="btn btn-outline-info btn-sm mx-1" onClick={onRedo}>
+        <button className="btn btn-outline-info btn-sm mx-1" onClick={onRedo} disabled={!redoPossible}>
             Redo
         </button>
     </nav>);
