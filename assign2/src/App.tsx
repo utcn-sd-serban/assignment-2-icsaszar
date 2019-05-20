@@ -6,10 +6,15 @@ import {HashRouter, Route, Switch} from "react-router-dom";
 import PostDetailsMainView from "./view/details/PostDetailsMainView/PostDetailsMainView";
 import SmartHeader from "./view/general/Header/SmartHeader";
 import SmartUserAccountView from "./view/account/UserAccount/SmartUserAccountView";
+import {WebSocketClient} from "./ws/WebSocketClient";
+import {store} from "./model/Model";
 
 export default class App extends Component{
-    //TODO move fetch here
     render() {
+
+        // WebSocketClient.make("serban", "password", store.dispatch);
+        WebSocketClient.make("User2", "dhas9d8hdq2de", store.dispatch);
+
         return (
             <HashRouter>
                 <SmartHeader/>

@@ -13,6 +13,9 @@ import {Command} from "../command/types";
 import RestClient from "../../rest/RestClient";
 import {isStale} from "../utility";
 import {useState} from "react";
+import {async} from "q";
+import {func} from "prop-types";
+import {fetchPosts} from "../question/postlist/asyncActions";
 
 
 export function doLoginUser(userName: string, password: string): UserActions{
@@ -23,8 +26,8 @@ export function doLoginUser(userName: string, password: string): UserActions{
     }
 }
 
-export function doAddVote(postId: number, postAuthorId: number, direction: VoteDirection): UserActions{
-    return new AddVoteAction(postId, direction, postAuthorId)
+export function doAddVote(postId: number, direction: VoteDirection): UserActions{
+    return new AddVoteAction(postId, direction)
 }
 
 export function doRemoveVote(postId: number) {
@@ -58,6 +61,21 @@ export function fetchUserDetails(): ThunkResult<Promise<void>>{
                     let data = await response.data.json();
                     dispatch(doReceiveDetails(data))
                 }
+            }
+        }
+    }
+}
+
+export function sendVote(postId: number, direction: VoteDirection): ThunkResult<Promise<void>> {
+    return async function (dispatch, getState) {
+        let {userState: {currentUser}} = getState();
+        if(currentUser) {
+            let restClient = new RestClient(currentUser.name, currentUser.password);
+            let response = await restClient.voteOnPost(new Vote(postId, direction));
+            if (response.status === 'succeeded'){
+                let data: Vote = await response.data.json();
+                dispatch(doAddVote(data.postId, data.direction));
+                dispatch(fetchPosts(true)) // Update scores
             }
         }
     }

@@ -28,12 +28,10 @@ export class AddVoteAction implements UndoableCommand{
 
     postId: number;
     direction: VoteDirection;
-    postAuthorId: number;
 
-    constructor(postId: number, direction: "up" | "down", postAuthorId: number) {
+    constructor(postId: number, direction: "up" | "down") {
         this.postId = postId;
         this.direction = direction;
-        this.postAuthorId = postAuthorId;
     }
 
 
@@ -69,11 +67,9 @@ export class RemoveVoteAction implements UndoableCommand{
         }
 
         let previousVote = findVote(state, this.postId);
-        let postAuthor = findPostAuthorId(state, this.postId) as number;
         return new AddVoteAction(
             this.postId,
             previousVote.direction,
-            postAuthor
         )
     }
 }

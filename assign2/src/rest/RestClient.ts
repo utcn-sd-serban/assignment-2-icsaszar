@@ -2,18 +2,37 @@ import {QuestionDTO} from "../model/objects/Question";
 import {AnswerDTO} from "../model/objects/Answer";
 import {Vote} from "../model/objects/Vote";
 
-export type ResponseData = {
+interface OkResponse {
     status: 'succeeded'
     data: Response
-} | {status: 'failed'}
-
-function onSuccess(response: Response): ResponseData{
-    return  {
-        data: response,
-        status: 'succeeded'
-    };
 }
-function onFailure(err: any): ResponseData{
+
+interface ErrorResponse {
+    status: 'error'
+    data: Response
+}
+
+interface Failed {
+    status: 'failed'
+}
+
+export type ResponseData = OkResponse | ErrorResponse | Failed
+
+function onSuccess(response: Response): ResponseData {
+    if (response.status === 200) {
+        return {
+            data: response,
+            status: 'succeeded'
+        };
+    } else {
+        return {
+            data: response,
+            status: 'error'
+        }
+    }
+}
+
+function onFailure(err: any): ResponseData {
     console.log(err);
     return {
         status: 'failed'
@@ -32,7 +51,7 @@ export default class RestClient {
 
     static readonly BASE_URL: string = "http://localhost:8080/";
 
-    private createRequest(path: String, method: 'GET' | 'POST' | 'PUT' | 'DELETE'): HttpRequest{
+    private createRequest(path: String, method: 'GET' | 'POST' | 'PUT' | 'DELETE'): HttpRequest {
         return {
             info: RestClient.BASE_URL + path,
             init: {
@@ -64,7 +83,7 @@ export default class RestClient {
         return this.createRequest(path, "DELETE")
     }
 
-    private createPutRequest<T>(path: string, body: T){
+    private createPutRequest<T>(path: string, body: T) {
         let req = this.createRequest(path, 'PUT');
         return {
             ...req,
@@ -75,14 +94,14 @@ export default class RestClient {
         }
     }
 
-    constructor(username: string, password: string){
+    constructor(username: string, password: string) {
         this.username = username;
         this.password = password;
         let nameAndPass = `${username}:${password}`;
         this.authorization = `Basic ${btoa(nameAndPass)}`
     }
 
-    private static async makeAsyncRequest(info: RequestInfo, init: RequestInit){
+    private static async makeAsyncRequest(info: RequestInfo, init: RequestInit) {
         try {
             const response = await fetch(info, init);
             return onSuccess(response);
@@ -92,7 +111,7 @@ export default class RestClient {
     }
 
     async loadPosts(): Promise<ResponseData> {
-        let {info, init} = this.createGetRequest("posts");
+        let {info, init} = this.createGetRequest("questions");
         return RestClient.makeAsyncRequest(info, init);
     }
 
@@ -107,13 +126,13 @@ export default class RestClient {
     }
 
     async sendNewPost(newPost: QuestionDTO): Promise<ResponseData> {
-        let {info, init} = this.createPostRequest("posts", newPost);
+        let {info, init} = this.createPostRequest("questions", newPost);
         return RestClient.makeAsyncRequest(info, init);
     }
 
     async sendNewAnswer(newAnswer: AnswerDTO): Promise<ResponseData> {
         let {postId} = newAnswer;
-        let {info, init} = this.createPostRequest(`posts\\${postId}\\answers`, newAnswer);
+        let {info, init} = this.createPostRequest(`questions/${postId}/answers`, newAnswer);
         return RestClient.makeAsyncRequest(info, init);
     }
 
@@ -122,61 +141,55 @@ export default class RestClient {
         return RestClient.makeAsyncRequest(info, init);
     }
 
-    async editPost(editedPost: QuestionDTO & {id: number}): Promise<ResponseData> {
+    async editPost(editedPost: QuestionDTO & { id: number }): Promise<ResponseData> {
         let {id} = editedPost;
-        let {info, init} = this.createPutRequest(`posts\\${id}`, editedPost);
+        let {info, init} = this.createPutRequest(`questions/${id}`, editedPost);
         return RestClient.makeAsyncRequest(info, init);
     }
 
-    async editAnswer(editedAnswer: AnswerDTO & {id: number}): Promise<ResponseData> {
+    async editAnswer(editedAnswer: AnswerDTO & { id: number }): Promise<ResponseData> {
         let {id, postId} = editedAnswer;
-        let {info, init} = this.createPutRequest(`posts\\${postId}\\answers\\${id}`, editedAnswer);
+        let {info, init} = this.createPutRequest(`questions/${postId}/answers/${id}`, editedAnswer);
         return RestClient.makeAsyncRequest(info, init);
     }
 
-    async voteOnQuestion(vote: Vote): Promise<ResponseData>{
+    async voteOnPost(vote: Vote): Promise<ResponseData> {
         let {postId} = vote;
-        let {info, init} = this.createPostRequest(`posts\\${postId}\\votes`, vote);
+        let {info, init} = this.createPostRequest(`posts/${postId}/votes`, vote);
         return RestClient.makeAsyncRequest(info, init);
     }
 
-    async voteOnAnswer({vote, questionId}: {vote: Vote, questionId: number}): Promise<ResponseData>{
+    async changeQuestionVote(vote: Vote): Promise<ResponseData> {
         let {postId} = vote;
-        let {info, init} = this.createPutRequest(`posts\\${questionId}\\answers\\${postId}\\votes`, vote);
+        let {info, init} = this.createPutRequest(`posts/${postId}/votes`, vote);
         return RestClient.makeAsyncRequest(info, init);
     }
 
-    async changeQuestionVote(vote: Vote): Promise<ResponseData>{
+    async changeAnswerVote({vote, questionId}: { vote: Vote, questionId: number }): Promise<ResponseData> {
         let {postId} = vote;
-        let {info, init} = this.createPutRequest(`posts\\${postId}\\votes`, vote);
+        let {info, init} = this.createPutRequest(`posts/${questionId}/answers/${postId}/votes`, vote);
         return RestClient.makeAsyncRequest(info, init);
     }
 
-    async changeAnswerVote({vote, questionId}: {vote: Vote, questionId: number}): Promise<ResponseData>{
+    async deleteQuestionVote(vote: Vote): Promise<ResponseData> {
         let {postId} = vote;
-        let {info, init} = this.createPutRequest(`posts\\${questionId}\\answers\\${postId}\\votes`, vote);
+        let {info, init} = this.createDeleteRequest(`posts/${postId}/votes`);
         return RestClient.makeAsyncRequest(info, init);
     }
 
-    async deleteQuestionVote(vote: Vote): Promise<ResponseData>{
+    async deleteAnswerVote({vote, questionId}: { vote: Vote, questionId: number }): Promise<ResponseData> {
         let {postId} = vote;
-        let {info, init} = this.createDeleteRequest(`posts\\${postId}\\votes`);
-        return RestClient.makeAsyncRequest(info, init);
-    }
-
-    async deleteAnswerVote({vote, questionId}: {vote: Vote, questionId: number}): Promise<ResponseData>{
-        let {postId} = vote;
-        let {info, init} = this.createDeleteRequest(`posts\\${questionId}\\answers\\${postId}\\votes`);
+        let {info, init} = this.createDeleteRequest(`posts/${questionId}/answers/${postId}/votes`);
         return RestClient.makeAsyncRequest(info, init);
     }
 
     async deletePost(id: number): Promise<ResponseData> {
-        let {info, init} = this.createDeleteRequest(`posts\\${id}`);
+        let {info, init} = this.createDeleteRequest(`posts/${id}`);
         return RestClient.makeAsyncRequest(info, init);
     }
 
     async deleteAnswer(postId: number, answerId: number): Promise<ResponseData> {
-        let {info, init} = this.createDeleteRequest(`posts\\${postId}\\answers\\${answerId}`);
+        let {info, init} = this.createDeleteRequest(`posts/${postId}/answers/${answerId}`);
         return RestClient.makeAsyncRequest(info, init);
     }
 }

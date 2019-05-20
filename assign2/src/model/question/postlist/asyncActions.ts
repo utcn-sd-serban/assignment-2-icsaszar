@@ -9,11 +9,11 @@ import {isStale} from "../../utility";
 
 type ThunkResult<R> = ThunkAction<R, AppState, undefined, Command>;
 
-export function fetchPosts(): ThunkResult<Promise<void>>{
+export function fetchPosts(invalidate: boolean = false): ThunkResult<Promise<void>>{
     return async (dispatch, getState) => {
         let {userState: {currentUser}, questionState: {postListState}} = getState();
         if(currentUser){
-            if(isStale(postListState.lastFetched)){
+            if(isStale(postListState.lastFetched) || invalidate){
                 dispatch(doRequestPosts());
                 let restClient = new RestClient(currentUser.name, currentUser.password);
                 try {

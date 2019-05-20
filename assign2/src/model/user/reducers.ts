@@ -1,6 +1,6 @@
 import {ADD_VOTE, LOGIN_USER, RECEIVE_DETAILS, REQUEST_DETAILS, UserActions, UsersState} from "./types";
 import * as Data from '../SeedData'
-import {Vote} from "../objects/Vote";
+import {Vote, VoteDirection} from "../objects/Vote";
 import User from "../objects/User";
 
 const initialState: UsersState = {
@@ -44,22 +44,21 @@ export function userReducer(state: UsersState = initialState, action: UserAction
             };
 
         case ADD_VOTE:
-            if(state.currentUser && action.postAuthorId !== state.currentUser.id){
-                return {
-                    ...state,
-                    userVotes:
-                        state.userVotes.find(v => v.postId === action.postId)
-                            ? state.userVotes.map(v =>
-                                v.postId === action.postId ? Vote.fromObject({...v, direction: action.direction}) : v
-                            )
-                            : [...state.userVotes, new Vote(action.postId, action.direction)]
-                };
+            let oldVote = state.userVotes.find(v => v.postId === action.postId);
+
+            function updateVote(votes: Vote[], id: number, newDirection: VoteDirection): Vote[] {
+                return votes.map(v =>
+                    v.postId === id ? Vote.fromObject({...v, direction: newDirection}) : v
+                )
             }
-            else {
-                return {
-                    ...state
-                };
-            }
+
+            return {
+                ...state,
+                userVotes:
+                    oldVote
+                        ? updateVote(state.userVotes, action.postId, action.direction)
+                        : [...state.userVotes, new Vote(action.postId, action.direction)]
+            };
 
         default:
             return state;
