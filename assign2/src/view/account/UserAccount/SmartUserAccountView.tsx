@@ -3,7 +3,7 @@ import User from "../../../model/objects/User";
 import {AppState} from "../../../model/Model";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
-import {getPostsByAuthorId} from "../../../model/question/postlist/selectors";
+import {getPostsByAuthorId, UserPosts} from "../../../model/question/postlist/selectors";
 import {RouteComponentProps} from "react-router";
 import {getUserById} from "../../../model/user/selectors";
 import Answer from "../../../model/objects/Answer";
@@ -11,16 +11,15 @@ import Question from "../../../model/objects/Question";
 import UserAccountView from "./UserAccountView";
 import {AnswerView} from "../../general/reuseable/AnswerView";
 import {QuestionView} from "../../general/reuseable/QuestionView"
-import Post from "../../../model/objects/Post";
 import {userAccountPresenter} from "../../../presesnter/UserAccountPresenter";
 
 interface Props {
-    posts: Post[];
+    posts: UserPosts;
     currentUser?: User;
     onQuestionInputChange: (questionId: number) => (value: string) => void;
     onAnswerInputChange: (answerId: number) => (value: string) => void;
-    onUpdateQuestion: (questionId: number) => () => void;
-    onUpdateAnswer: (answerId: number) => () => void;
+    onUpdateQuestion: (questionId: number, newText: string) => () => void;
+    onUpdateAnswer: (answerId: number, newText: string, questionId: number) => () => void;
     onDeleteQuestion: (questionId: number) => () => void;
     onDeleteAnswer: (answerId: number) => () => void;
 }
@@ -31,35 +30,38 @@ class SmartUserAccountView extends React.Component<Props> {
             this.props.currentUser &&
             <div>
                 <UserAccountView user={this.props.currentUser}/>
-                {
-                    this.props.posts.map(post => {
-                            if (post instanceof Question) {
-                                return (
-                                    <QuestionView
-                                        key={post.id}
-                                        question={post}
-                                        editable={{
-                                            onSave: this.props.onUpdateQuestion(post.id),
-                                            onChangeInput: this.props.onQuestionInputChange(post.id)
-                                        }}
-                                        onDelete={this.props.onDeleteQuestion(post.id)}
-                                    />
-                                );
-                            }
-                            if (post instanceof Answer)
-                                return (
-                                    <AnswerView
-                                        key={post.id}
-                                        answer={post}
-                                        editable={{
-                                            onSave: this.props.onUpdateAnswer(post.id),
-                                            onChangeInput: this.props.onAnswerInputChange(post.id)
-                                        }}
-                                        onDelete={this.props.onDeleteAnswer(post.id)}
-                                    />
-                                );
-                        }
-                    )
+                <div>
+                    {
+                        this.props.posts.questions.map(question => (
+                            <QuestionView
+                                key={question.id}
+                                question={question}
+                                editable={{
+                                    onSave: this.props.onUpdateQuestion(question.id, question.tempText),
+                                    onChangeInput: this.props.onQuestionInputChange(question.id)
+                                }}
+                                onDelete={this.props.onDeleteQuestion(question.id)}
+                            />
+                        ))
+                    }
+                </div>
+                <div>
+                    {
+                        this.props.posts.answers.map(answer =>
+                            (
+                                <AnswerView
+                                    key={answer.id}
+                                    answer={answer}
+                                    editable={{
+                                        onSave: this.props.onUpdateAnswer(answer.id, answer.tempText, answer.responseTo),
+                                        onChangeInput: this.props.onAnswerInputChange(answer.id)
+                                    }}
+                                    onDelete={this.props.onDeleteAnswer(answer.id)}
+                                />
+                            )
+                        )
+                    }
+                </div>
                 }
             </div>
         )
@@ -70,7 +72,7 @@ function mapStateToProps(state: AppState, props: RouteComponentProps<{ id: strin
     const currentUser = state.userState.currentUser;
     return {
         currentUser: currentUser,
-        posts: currentUser ? getPostsByAuthorId(state, Number(props.match.params.id)) : []
+        posts: currentUser ? getPostsByAuthorId(state, Number(props.match.params.id)) : {questions: [], answers: []}
     }
 }
 
@@ -81,10 +83,10 @@ function mapDispatchToProps(dispatch: Dispatch) {
             presenter.handleQuestionInputChange(questionId, value),
         onAnswerInputChange: (answerId: number) => (value: string) =>
             presenter.handleAnswerInputChange(answerId, value),
-        onUpdateQuestion: (questionId: number) => () =>
-            presenter.handleUpdateQuestion(questionId),
-        onUpdateAnswer: (answerId: number) => () =>
-            presenter.handleUpdateAnswer(answerId),
+        onUpdateQuestion: (questionId: number, newText: string) => () =>
+            presenter.handleUpdateQuestion(questionId, newText),
+        onUpdateAnswer: (answerId: number, newText: string, questionId: number) => () =>
+            presenter.handleUpdateAnswer(answerId, newText, questionId),
         onDeleteQuestion: (questionId: number) => () =>
             presenter.handleDeleteQuestion(questionId),
         onDeleteAnswer: (answerId: number) => () =>

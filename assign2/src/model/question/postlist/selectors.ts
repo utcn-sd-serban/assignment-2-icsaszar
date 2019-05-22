@@ -52,9 +52,19 @@ export function getQuestionAndAnswersWithVotes(state: AppState, questionId: stri
     }
 }
 
+export interface UserPosts{
+    questions: Question[]
+    answers: (Answer & {responseTo: number})[]
+}
 
-export function getPostsByAuthorId({questionState: {postListState}}: AppState, authorId: number): Post[] {
+export function getPostsByAuthorId({questionState: {postListState}}: AppState, authorId: number): UserPosts {
     const questions = postListState.questions.filter(q => q.author.id === authorId);
-    const answers = postListState.questions.flatMap(q => q.answers).filter(a => a.author.id === authorId);
-    return [...questions, ...answers]
+    const answers = postListState.questions
+        .flatMap(q => q.answers
+            .map(a => ({...a, responseTo: q.id}) ))
+        .filter(a => a.author.id === authorId);
+    return {
+        questions,
+        answers
+    }
 }
