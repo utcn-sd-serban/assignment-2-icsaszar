@@ -30,8 +30,8 @@ class App extends Component<Props>{
             <HashRouter>
                 {this.props.currentUser &&  <SmartHeader/> }
                 <Switch>
-                    <Route exact={true} component={SmartLoginView} path={"/login"}/>
-                    <Route exact={true} component={QuestionsMainView} path={"/"}/>
+                    <Route exact={true} component={SmartLoginView} path={"/"}/>
+                    <Route exact={true} component={QuestionsMainView} path={"/posts"}/>
                     <Route exact={true} component={SmartNewPostView} path={"/submit"}/>
                     <Route exact={true} component={PostDetailsMainView} path={"/posts/:id"}/>
                     <Route exact={true} component={SmartUserAccountView} path={"/users/:id"}/>

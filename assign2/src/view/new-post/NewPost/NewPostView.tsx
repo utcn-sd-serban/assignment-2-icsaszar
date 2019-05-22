@@ -2,6 +2,7 @@ import React from 'react';
 import Tag from "../../../model/objects/Tag";
 import TagListView from "../../general/reuseable/TagListView";
 import {NewPostField} from "../../../model/question/newpost/types";
+import {Link} from "react-router-dom";
 
 interface Params {
     onSubmit: () => void;
@@ -53,13 +54,15 @@ export function NewPostView(
                 placeholder={"Text"}
                 name={"text"}
             />
-            <button
-                className={"btn m-1 " + "btn-primary"}
-                onClick={onSubmit}
-                disabled={submitButtonDisabled}
-            >
-                Submit
-            </button>
+            <Link to={"/posts"}>
+                <button
+                    className={"btn m-1 " + "btn-primary"}
+                    onClick={onSubmit}
+                    disabled={submitButtonDisabled}
+                >
+                    Submit
+                </button>
+            </Link>
             <select onChange={({target: {value}}) => onChangeTag(value)} value={currentTag}>
                 {
                     tags.map(tag =>

@@ -13,8 +13,8 @@ import User from "../objects/User";
 
 const initialState: UsersState = {
     currentUser: undefined,
-    tempUsername: "",
-    tempPassword: "",
+    tempUsername: "User2",
+    tempPassword: "dhas9d8hdq2de",
     userVotes: [],
     isFetching: false,
     lastFetched: new Date(0)

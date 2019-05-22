@@ -1,5 +1,7 @@
 import * as React from "react";
 import {LoginField} from "../../model/user/types";
+import {Redirect} from "react-router";
+import {Link} from "react-router-dom";
 
 interface Props {
     username: string;
@@ -40,11 +42,13 @@ export function LoginView(
                     />
                 </div>
             </div>
-            <div className="row">
+            < div className="row">
                 <div className="col">
-                    <button className="btn btn-primary" onClick={onLogin}>
-                        Log in
-                    </button>
+                    <Link to={"/posts"}>
+                        <button className="btn btn-primary" onClick={onLogin}>
+                            Log in
+                        </button>
+                    </Link>
                 </div>
             </div>
         </div>
