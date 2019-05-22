@@ -24,15 +24,14 @@ export function PostDetailsView({question, onVote}: Props) {
                     <QuestionView question={question} titleIsLink={false}/>
                 </div>
             </div>
-
             {
                 question.answers.map(answer =>
-                    <div className="row align-items-center" >
+                    <div className="row align-items-center" key={answer.id}>
                         <div className="col-1">
                             <VotePane score={answer.score} onVote={onVote(answer.id, answer.author.id)} voted={answer.voted}/>
                         </div>
                         <div className="col">
-                            <AnswerView key={answer.id} answer={answer}/>
+                            <AnswerView answer={answer}/>
                         </div>
                     </div>
                 )

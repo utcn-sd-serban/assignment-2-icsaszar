@@ -7,7 +7,7 @@ import {fetchTags} from "../model/tag/actions";
 import {fetchUserDetails} from "../model/user/actions";
 
 
-export const questionListPresenter = (dispatch: ThunkDispatch<AppState, undefined, Command>) => ({
+export const appPresenter = (dispatch: ThunkDispatch<AppState, undefined, Command>) => ({
    handleFetchPosts: () => dispatch(fetchPosts()),
    handleFetchTags: () => dispatch(fetchTags()),
    handleFetchUserDetails: () => dispatch(fetchUserDetails())

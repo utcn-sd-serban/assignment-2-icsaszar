@@ -7,13 +7,24 @@ import PostDetailsMainView from "./view/details/PostDetailsMainView/PostDetailsM
 import SmartHeader from "./view/general/Header/SmartHeader";
 import SmartUserAccountView from "./view/account/UserAccount/SmartUserAccountView";
 import {WebSocketClient} from "./ws/WebSocketClient";
-import {store} from "./model/Model";
+import {AppState, store} from "./model/Model";
+import {ThunkDispatch} from "redux-thunk";
+import {Command} from "./model/command/types";
+import {appPresenter} from "./presesnter/AppPresenter";
+import {connect} from "react-redux";
+import RestClient from "./rest/RestClient";
 
-export default class App extends Component{
+interface Props {
+    fetchPosts: () => void;
+    fetchTags: () => void;
+    fetchUserDetails: () => void;
+}
+
+class App extends Component<Props>{
     render() {
 
-        // WebSocketClient.make("serban", "password", store.dispatch);
-        WebSocketClient.make("User2", "dhas9d8hdq2de", store.dispatch);
+        WebSocketClient.initialize("User2", "dhas9d8hdq2de", store.dispatch);
+        RestClient.initialize("User2", "dhas9d8hdq2de");
 
         return (
             <HashRouter>
@@ -27,4 +38,24 @@ export default class App extends Component{
             </HashRouter>
         );
     }
+
+    componentDidMount(): void {
+        this.props.fetchUserDetails();
+        this.props.fetchPosts();
+        this.props.fetchTags();
+    }
 }
+
+function mapDispatchToProps(dispatch: ThunkDispatch<AppState, undefined, Command>) {
+    let presenter = appPresenter(dispatch);
+    return {
+        fetchPosts: () =>
+            presenter.handleFetchPosts(),
+        fetchTags: () =>
+            presenter.handleFetchTags(),
+        fetchUserDetails: () =>
+            presenter.handleFetchUserDetails()
+    }
+}
+
+export default connect(undefined, mapDispatchToProps)(App)
