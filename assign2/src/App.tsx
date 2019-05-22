@@ -13,11 +13,11 @@ import {Command} from "./model/command/types";
 import {appPresenter} from "./presesnter/AppPresenter";
 import {connect} from "react-redux";
 import RestClient from "./rest/RestClient";
+import SmartLoginView from "./view/login/SmartLoginView";
+import User from "./model/objects/User";
 
 interface Props {
-    fetchPosts: () => void;
-    fetchTags: () => void;
-    fetchUserDetails: () => void;
+    currentUser?: User
 }
 
 class App extends Component<Props>{
@@ -28,8 +28,9 @@ class App extends Component<Props>{
 
         return (
             <HashRouter>
-                <SmartHeader/>
+                {this.props.currentUser &&  <SmartHeader/> }
                 <Switch>
+                    <Route exact={true} component={SmartLoginView} path={"/login"}/>
                     <Route exact={true} component={QuestionsMainView} path={"/"}/>
                     <Route exact={true} component={SmartNewPostView} path={"/submit"}/>
                     <Route exact={true} component={PostDetailsMainView} path={"/posts/:id"}/>
@@ -38,24 +39,12 @@ class App extends Component<Props>{
             </HashRouter>
         );
     }
-
-    componentDidMount(): void {
-        this.props.fetchUserDetails();
-        this.props.fetchPosts();
-        this.props.fetchTags();
-    }
 }
 
-function mapDispatchToProps(dispatch: ThunkDispatch<AppState, undefined, Command>) {
-    let presenter = appPresenter(dispatch);
+function mapStateToProps(state: AppState): Props{
     return {
-        fetchPosts: () =>
-            presenter.handleFetchPosts(),
-        fetchTags: () =>
-            presenter.handleFetchTags(),
-        fetchUserDetails: () =>
-            presenter.handleFetchUserDetails()
+        currentUser: state.userState.currentUser
     }
 }
 
-export default connect(undefined, mapDispatchToProps)(App)
+export default connect(mapStateToProps)(App);

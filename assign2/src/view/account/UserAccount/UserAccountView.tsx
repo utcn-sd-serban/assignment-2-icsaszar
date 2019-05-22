@@ -6,7 +6,7 @@ export default function UserAccountView({user}: {user: User}) {
         <div className="container">
             <div className="row ">
                 <div className="col">
-                    <h3> {user.name} </h3>
+                    <h3> {user.username} </h3>
                 </div>
             </div>
         </div>

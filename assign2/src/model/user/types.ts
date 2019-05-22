@@ -8,22 +8,33 @@ export const ADD_VOTE = '[USER] ADD VOTE';
 export const REMOVE_VOTE = '[USER] REMOVE VOTE';
 export const REQUEST_DETAILS = '[USER] REQUEST DETAILS';
 export const RECEIVE_DETAILS = '[USER] RECEIVE DETAILS';
+export const SET_LOGIN_DETAILS = '[USER] SET LOGIN DETAILS';
+
+type UserWithPassword = User & { password: string }
 
 export interface UsersState {
-    currentUser: (User & {password: string})|undefined;
-    users: User[];
+    currentUser: UserWithPassword | undefined;
+    tempUsername: string;
+    tempPassword: string;
     userVotes: Vote[];
     isFetching: boolean;
     lastFetched: Date;
 }
 
-interface LoginUserAction extends Command{
-    type: typeof LOGIN_USER;
-    userName: string;
-    password: string;
+export type LoginField = "username" | "password";
+
+export interface SetLoginDetailsAction {
+    type: typeof SET_LOGIN_DETAILS;
+    field: LoginField;
+    value: string;
 }
 
-export class AddVoteAction implements UndoableCommand{
+export interface SetCurrentUserAction extends Command {
+    type: typeof LOGIN_USER;
+    payload: UserWithPassword
+}
+
+export class AddVoteAction implements UndoableCommand {
     type: typeof ADD_VOTE = ADD_VOTE;
 
     postId: number;
@@ -35,12 +46,12 @@ export class AddVoteAction implements UndoableCommand{
     }
 
 
-    makeAntiAction(state: AppState, ...args: any[]): RemoveVoteAction{
+    makeAntiAction(state: AppState): RemoveVoteAction {
         return new RemoveVoteAction(this.postId)
     }
 }
 
-export class RemoveVoteAction implements UndoableCommand{
+export class RemoveVoteAction implements UndoableCommand {
     type: typeof REMOVE_VOTE = REMOVE_VOTE;
 
     postId: number;
@@ -50,17 +61,17 @@ export class RemoveVoteAction implements UndoableCommand{
     }
 
 
-    makeAntiAction(state: AppState, ...args: any[]): AddVoteAction{
+    makeAntiAction(state: AppState): AddVoteAction {
         function findVote(state: AppState, postId: number): Vote {
             return state.userState.userVotes.find(v => v.postId === postId) as Vote
         }
 
-        function findPostAuthorId(state: AppState, postId: number){
-            for(let q of state.questionState.postListState.questions){
-                if(q.id === postId)
+        function findPostAuthorId(state: AppState, postId: number) {
+            for (let q of state.questionState.postListState.questions) {
+                if (q.id === postId)
                     return q.author.id;
-                for(let a of q.answers){
-                    if(a.id === postId)
+                for (let a of q.answers) {
+                    if (a.id === postId)
                         return a.author.id;
                 }
             }
@@ -74,11 +85,11 @@ export class RemoveVoteAction implements UndoableCommand{
     }
 }
 
-export interface RequestUserDetailsAction extends Command{
+export interface RequestUserDetailsAction extends Command {
     type: typeof REQUEST_DETAILS;
 }
 
-export interface ReceiveUserDetailsAction extends Command{
+export interface ReceiveUserDetailsAction extends Command {
     type: typeof RECEIVE_DETAILS;
     data: {
         id: number;
@@ -86,4 +97,9 @@ export interface ReceiveUserDetailsAction extends Command{
     }
 }
 
-export type UserActions = LoginUserAction | AddVoteAction | RequestUserDetailsAction | ReceiveUserDetailsAction;
+export type UserActions = SetCurrentUserAction
+                        | AddVoteAction
+                        | RequestUserDetailsAction
+                        | ReceiveUserDetailsAction
+                        | SetCurrentUserAction
+                        | SetLoginDetailsAction;

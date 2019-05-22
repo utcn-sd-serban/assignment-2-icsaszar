@@ -31,7 +31,7 @@ export function AnswerView({answer, editable, onDelete}: Props){
                 <div className={"col"}> {text} </div>
             </div>
             <div className={"row"}>
-                <div className={"col"}> {author.name} </div>
+                <div className={"col"}> {author.username} </div>
                 <div className={"col"}> {posted.toDateString()} </div>
             </div>
         </div>

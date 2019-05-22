@@ -6,27 +6,27 @@ import Answer from "./objects/Answer";
 export const users: User[] = [
     {
         id: 1,
-        name: "User2"
+        username: "User2"
     },
     {
         id: 2,
-        name: "bork2121"
+        username: "bork2121"
     },
     {
         id: 3,
-        name: "thedudehimself"
+        username: "thedudehimself"
     },
     {
         id: 4,
-        name: "opisanidiot"
+        username: "opisanidiot"
     },
     {
         id: 5,
-        name: "justfinishedcollege"
+        username: "justfinishedcollege"
     },
     {
         id: 6,
-        name: "TitsMcGee4782"
+        username: "TitsMcGee4782"
     }
 ];
 

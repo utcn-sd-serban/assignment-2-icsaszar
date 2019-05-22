@@ -5,9 +5,6 @@ import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {getPostsByAuthorId, UserPosts} from "../../../model/question/postlist/selectors";
 import {RouteComponentProps} from "react-router";
-import {getUserById} from "../../../model/user/selectors";
-import Answer from "../../../model/objects/Answer";
-import Question from "../../../model/objects/Question";
 import UserAccountView from "./UserAccountView";
 import {AnswerView} from "../../general/reuseable/AnswerView";
 import {QuestionView} from "../../general/reuseable/QuestionView"

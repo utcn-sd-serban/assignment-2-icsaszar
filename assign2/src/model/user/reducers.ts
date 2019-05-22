@@ -1,14 +1,20 @@
-import {ADD_VOTE, LOGIN_USER, RECEIVE_DETAILS, REQUEST_DETAILS, UserActions, UsersState} from "./types";
+import {
+    ADD_VOTE,
+    LOGIN_USER,
+    RECEIVE_DETAILS,
+    REQUEST_DETAILS,
+    SET_LOGIN_DETAILS,
+    UserActions,
+    UsersState
+} from "./types";
 import * as Data from '../SeedData'
 import {Vote, VoteDirection} from "../objects/Vote";
 import User from "../objects/User";
 
 const initialState: UsersState = {
-    currentUser: {
-        ...Data.users[0],
-        password: "dhas9d8hdq2de"
-    },
-    users: Data.users,
+    currentUser: undefined,
+    tempUsername: "",
+    tempPassword: "",
     userVotes: [],
     isFetching: false,
     lastFetched: new Date(0)
@@ -16,9 +22,20 @@ const initialState: UsersState = {
 
 export function userReducer(state: UsersState = initialState, action: UserActions): UsersState {
     switch (action.type) {
+        case SET_LOGIN_DETAILS:
+            if (action.field === "username")
+                return {
+                    ...state,
+                    tempUsername: action.value
+                };
+            else
+                return {
+                    ...state,
+                    tempPassword: action.value
+                };
         case REQUEST_DETAILS:
             return {
-                  ...state,
+                ...state,
                 isFetching: true
             };
         case RECEIVE_DETAILS:
@@ -34,23 +51,19 @@ export function userReducer(state: UsersState = initialState, action: UserAction
                     action.data.votes.map(v => new Vote(v.postId, v.direction))
             };
         case LOGIN_USER:
-            let foundUser = state.users.find(u => u.name === action.userName);
             return {
                 ...state,
-                currentUser: foundUser ? {
-                    ...foundUser,
-                    password: action.password
-                } : undefined
+                currentUser: action.payload
             };
 
         case ADD_VOTE:
             let oldVote = state.userVotes.find(v => v.postId === action.postId);
 
-            function updateVote(votes: Vote[], id: number, newDirection: VoteDirection): Vote[] {
-                return votes.map(v =>
-                    v.postId === id ? Vote.fromObject({...v, direction: newDirection}) : v
-                )
-            }
+        function updateVote(votes: Vote[], id: number, newDirection: VoteDirection): Vote[] {
+            return votes.map(v =>
+                v.postId === id ? Vote.fromObject({...v, direction: newDirection}) : v
+            )
+        }
 
             return {
                 ...state,
