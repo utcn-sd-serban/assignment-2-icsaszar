@@ -1,8 +1,11 @@
 import {AppState} from "../Model";
 
-export const DO_ACTION = "[COMMAND] DO ACTION";
+export const SAVE_ACTION = "[COMMAND] SAVE ACTION";
 export const UNDO_ACTION = "[COMMAND] UNDO ACTION";
 export const REDO_ACTION = "[COMMAND] REDO ACTION";
+export const DISPATCH_ACTION = "[COMMAND] DISPATCH ACTION";
+
+
 
 export interface Command {
     readonly type: string
@@ -22,17 +25,22 @@ export interface CommandState {
     readonly future: ActionPair[];
 }
 
-interface DoCommandAction extends Command{
-    type: typeof DO_ACTION;
+export interface SaveCommandAction extends Command{
+    type: typeof SAVE_ACTION;
     actionPair: ActionPair
 }
 
-interface UndoCommandAction extends Command{
+export interface UndoCommandAction extends Command{
     type: typeof UNDO_ACTION;
 }
 
-interface RedoCommandAction extends Command{
+export interface RedoCommandAction extends Command{
     type: typeof REDO_ACTION;
 }
 
-export type CommandActions = UndoCommandAction | RedoCommandAction | DoCommandAction;
+export interface DispatchCommandAction extends Command{
+    type: typeof DISPATCH_ACTION;
+    action: Command
+}
+
+export type CommandActions = UndoCommandAction | RedoCommandAction | SaveCommandAction | DispatchCommandAction;
