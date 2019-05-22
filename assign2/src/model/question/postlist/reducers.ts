@@ -22,7 +22,7 @@ import {
 import Question from "../../objects/Question";
 import * as Data from '../../SeedData'
 import Answer from "../../objects/Answer";
-
+import Post from "../../objects/Post";
 
 
 const initialState: PostListState = {
@@ -31,17 +31,22 @@ const initialState: PostListState = {
     lastFetched: new Date(0)
 };
 
-//Splitting this would be nice...
-export function postListReducer(state: PostListState = initialState, action: PostListActions): PostListState{
-    switch (action.type){
+
+export function postListReducer(state: PostListState = initialState, action: PostListActions): PostListState {
+    switch (action.type) {
         case REQUEST_POSTS:
             return fetchPosts(state);
         case RECEIVE_POSTS:
             return receivePosts(state, action);
+        // Inspired by how the backend does inserts/updates,
+        // this solves the problem of inserting the same question/answer twice
+        // If a post exists, it will be replaced by the new post, else the new post will be inserted
         case SAVE_UPDATED_ANSWER:
-            return saveUpdatedAnswer(state, action);
+        case ADD_ANSWER_TO_QUESTION:
+            return saveAnswer(state, action);
+        case NEW_POST:
         case SAVE_UPDATED_QUESTION:
-            return saveUpdatedQuestion(state, action);
+            return saveQuestion(state, action);
         case EDIT_QUESTION:
             return editQuestion(state, action);
         case EDIT_ANSWER:
@@ -50,10 +55,6 @@ export function postListReducer(state: PostListState = initialState, action: Pos
             return deleteQuestion(state, action);
         case DELETE_ANSWER:
             return deleteAnswer(state, action);
-        case NEW_POST:
-            return createNewPost(state, action);
-        case ADD_ANSWER_TO_QUESTION:
-            return addAnswer(state, action);
         default:
             return state;
     }
@@ -75,29 +76,6 @@ function receivePosts(state: PostListState, action: ReceivePostsAction): PostLis
     };
 }
 
-function saveUpdatedAnswer(state: PostListState, action: UpdateAnswerAction): PostListState {
-    return {
-        ...state,
-        questions: state.questions.map(q =>
-            Question.fromObject(
-                {
-                    ...q,
-                    answers: q.answers.map(a =>
-                        (a.id === action.answerId) ? Answer.fromObject({...a, text: a.tempText}) : a
-                    )
-                }
-            ))
-    };
-}
-
-function saveUpdatedQuestion(state: PostListState, action: UpdateQuestionAction): PostListState {
-    return {
-        ...state,
-        questions: state.questions.map(q =>
-            q.id === action.questionId ? Question.fromObject({...q, text: q.tempText}) : q
-        )
-    };
-}
 
 function editQuestion(state: PostListState, action: EditQuestionAction): PostListState {
     return {
@@ -141,25 +119,37 @@ function deleteAnswer(state: PostListState, action: DeleteAnswerAction): PostLis
     };
 }
 
-function createNewPost(state: PostListState, action: AddQuestionAction): PostListState{
-    return {
-        ...state,
-        questions: [...state.questions, action.data]
-    };
+function contains(posts: Post[], post: Post): boolean{
+    return posts.map(q => q.id).includes(post.id)
 }
 
-function addAnswer(state: PostListState, action: AddAnswerAction): PostListState{
-    const newAnswer = action.data;
+function saveQuestion(state: PostListState, action: AddQuestionAction | UpdateQuestionAction): PostListState {
+    let {questions} = state;
+    let {data} = action;
     return {
         ...state,
-        questions: state.questions.map(
-            q => {
-                if(q.id === action.targetQuestionId)
-                    return Question.fromObject({...q, answers: [...q.answers, newAnswer]});
-                else
-                    return q;
-                }
-            )
-    };
+        questions: contains(questions, data) ?
+            questions.map(q => q.id === data.id ? data : q) :
+            [...questions, data]
+    }
 }
+
+function saveAnswer(state: PostListState, action: AddAnswerAction | UpdateAnswerAction): PostListState {
+    let {questions} = state;
+    let {data, questionId} = action;
+    return {
+        ...state,
+        questions: questions.map(q => q.id === questionId ?
+            Question.fromObject({
+                ...q,
+                answers: contains(q.answers, data) ?
+                    q.answers.map(a => a.id === data.id ? data : a) :
+                    [...q.answers, data]
+
+            }) :
+            q
+        )
+    }
+}
+
 

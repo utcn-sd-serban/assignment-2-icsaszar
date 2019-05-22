@@ -3,11 +3,7 @@ import {Command, UndoableCommand} from "../../command/types";
 import {AppState} from "../../Model";
 import Answer from "../../objects/Answer";
 
-export const NEW_POST = "[QUESTION] NEW_POST";
-export const SET_NEW_POST_FIELD = "[QUESTION] SET NEW POST FIELD";
-export const SET_CURRENT_TAG = "[QUESTION] SET CURRENT TAG";
-export const ADD_TAG_TO_SELECTED_TAGS = "[QUESTION] ADD TAG TO SELECTED TAGS";
-export const CLEAR_NEW_POST_DATA = "[QUESTION] CLEAR NEW POST DATA";
+export const NEW_POST = "[QUESTION] NEW POST";
 export const ADD_ANSWER_TO_QUESTION = "[QUESTION] ADD ANSWER TO QUESTION";
 export const EDIT_QUESTION = "[QUESTION] EDIT QUESTION";
 export const EDIT_ANSWER = "[QUESTION] EDIT ANSWER";
@@ -42,11 +38,11 @@ export class AddAnswerAction implements UndoableCommand{
     type: typeof ADD_ANSWER_TO_QUESTION = ADD_ANSWER_TO_QUESTION;
 
     data: Answer;
-    targetQuestionId: number;
+    questionId: number;
 
     constructor(data: Answer, targetQuestionId: number) {
         this.data = data;
-        this.targetQuestionId = targetQuestionId
+        this.questionId = targetQuestionId
     }
 
     makeAntiAction(state: AppState): DeleteAnswerAction{
@@ -68,12 +64,13 @@ export interface EditAnswerAction extends Command{
 
 export interface UpdateQuestionAction extends Command{
     type: typeof SAVE_UPDATED_QUESTION
-    questionId: number
+    data: Question
 }
 
 export interface UpdateAnswerAction extends Command{
     type: typeof SAVE_UPDATED_ANSWER
-    answerId: number
+    questionId: number
+    data: Answer
 }
 
 export class DeleteQuestionAction implements UndoableCommand{
@@ -85,7 +82,7 @@ export class DeleteQuestionAction implements UndoableCommand{
         this.questionId = questionId;
     }
 
-    makeAntiAction(state: AppState, ...args: any[]): AddQuestionAction{
+    makeAntiAction(state: AppState): AddQuestionAction{
         let {questionState: {postListState}} = state;
         let question = postListState.questions.find(q => q.id === this.questionId) as Question;
         return new AddQuestionAction(question)
