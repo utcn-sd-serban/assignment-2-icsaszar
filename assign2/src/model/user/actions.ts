@@ -55,8 +55,7 @@ export function fetchUserDetails(): ThunkResult<Promise<void>>{
         if(currentUser) {
             if(isStale(lastFetched)){
                 dispatch(doRequestDetails());
-                let restClient = new RestClient(currentUser.name, currentUser.password);
-                let response = await restClient.loadUserDetails();
+                let response = await RestClient.loadUserDetails();
                 if (response.status === 'succeeded'){
                     let data = await response.data.json();
                     dispatch(doReceiveDetails(data))
@@ -70,8 +69,7 @@ export function sendVote(postId: number, direction: VoteDirection): ThunkResult<
     return async function (dispatch, getState) {
         let {userState: {currentUser}} = getState();
         if(currentUser) {
-            let restClient = new RestClient(currentUser.name, currentUser.password);
-            let response = await restClient.voteOnPost(new Vote(postId, direction));
+            let response = await RestClient.voteOnPost(new Vote(postId, direction));
             if (response.status === 'succeeded'){
                 let data: Vote = await response.data.json();
                 dispatch(doAddVote(data.postId, data.direction));

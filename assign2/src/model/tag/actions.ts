@@ -43,9 +43,8 @@ export function fetchTags(): ThunkResult<Promise<void>> {
         if (currentUser) {
             if(isStale(tagState.lastFetched)){
                 dispatch(doRequestTags());
-                let restClient = new RestClient(currentUser.name, currentUser.password);
                 try {
-                    let response = await restClient.loadTags();
+                    let response = await RestClient.loadTags();
                     if (response.status === 'succeeded'){
                         let data: Tag[] = await response.data.json();
                         dispatch(doReceiveTags(data))
@@ -62,9 +61,8 @@ export function sendNewTag(): ThunkResult<Promise<void>> {
     return async function (dispatch, getState) {
         let {userState: {currentUser}, tagState: {newTagName}} = getState();
         if (currentUser) {
-            let restClient = new RestClient(currentUser.name, currentUser.password);
             try {
-                let response = await restClient.sendNewTag(newTagName);
+                let response = await RestClient.sendNewTag(newTagName);
                 if (response.status === 'succeeded') {
                     let data: Tag = await response.data.json();
                     dispatch(doCreateNewTag(data.name, data.id));
