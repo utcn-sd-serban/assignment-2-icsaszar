@@ -3,7 +3,6 @@ import {QuestionFilter} from "../../filter/types";
 import Answer from "../../objects/Answer";
 import {VoteDirection} from "../../objects/Vote";
 import Question from "../../objects/Question";
-import Post from "../../objects/Post";
 
 export const getFilteredQuestions = (state: AppState) => {
     const {questions} = state.questionState.postListState;
@@ -15,7 +14,7 @@ export const getFilteredQuestions = (state: AppState) => {
         case QuestionFilter.FILTER_BY_TITLE:
             return questions.filter(q => q.title.toLowerCase().includes(searchedTitle.toLowerCase()));
         case QuestionFilter.FILTER_BY_TAG:
-            return questions.filter(q => q.tags.includes(searchedTag));
+            return questions.filter(q => q.tags.map(t => t.name).includes(searchedTag.name));
         default:
             return questions;
     }

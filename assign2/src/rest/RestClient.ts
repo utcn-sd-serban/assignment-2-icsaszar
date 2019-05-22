@@ -128,6 +128,16 @@ export default class RestClient {
         return RestClient.makeAsyncRequest(info, init);
     }
 
+    static async loadPostsByTag(tagName: string): Promise<ResponseData> {
+        let {info, init} = this.createGetRequest(`questions?tag=${tagName}`);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
+    static async loadPostsByTitle(title: string): Promise<ResponseData> {
+        let {info, init} = this.createGetRequest(`questions?title=${title}`);
+        return RestClient.makeAsyncRequest(info, init);
+    }
+
     static async loadPost(postId: number): Promise<ResponseData> {
         let {info, init} = this.createGetRequest(`questions/${postId}`);
         return RestClient.makeAsyncRequest(info, init);

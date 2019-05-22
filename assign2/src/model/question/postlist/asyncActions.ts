@@ -6,17 +6,32 @@ import Question, {QuestionDTO} from "../../objects/Question";
 import {doAddAnswer, doNewPost, doReceivePosts, doRequestPosts, doMergeUpdatedAnswer, doMergeUpdatedQuestion} from "./actions";
 import Answer, {AnswerDTO} from "../../objects/Answer";
 import {isStale} from "../../utility";
+import {QuestionFilter} from "../../filter/types";
 
 type ThunkResult<R> = ThunkAction<R, AppState, undefined, Command>;
 
-export function fetchPosts(invalidate: boolean = false): ThunkResult<Promise<void>>{
+//TODO take into consideration FilterState
+export function fetchPosts(forceAll: boolean = false, invalidate: boolean = false): ThunkResult<Promise<void>>{
     return async (dispatch, getState) => {
-        let {userState: {currentUser}, questionState: {postListState}} = getState();
+        let {userState: {currentUser},
+            questionState: {postListState},
+            filterState: {currentFilter, searchedTitle, searchedTag}} = getState();
         if(currentUser){
             if(isStale(postListState.lastFetched) || invalidate){
                 dispatch(doRequestPosts());
                 try {
-                    let response = await RestClient.loadPosts();
+                    let response: ResponseData;
+                    switch (currentFilter) {
+                        case QuestionFilter.FILTER_BY_TAG:
+                            response = await RestClient.loadPostsByTag(searchedTag.name);
+                            break;
+                        case QuestionFilter.FILTER_BY_TITLE:
+                            response = await RestClient.loadPostsByTitle(searchedTitle);
+                            break;
+                        default:
+                            response = await RestClient.loadPosts();
+                            break;
+                    }
                     if (response.status === 'succeeded'){
                         let data = await response.data.json();
                         dispatch(doReceivePosts(data));
