@@ -1,4 +1,4 @@
-import {Client, IMessage} from "@stomp/stompjs";
+import {Client} from "@stomp/stompjs";
 import {ThunkDispatch} from "redux-thunk";
 import {AppState} from "../model/Model";
 import {Command} from "../model/command/types";
@@ -6,8 +6,9 @@ import Question from "../model/objects/Question";
 import {doAddAnswer, doNewPost} from "../model/question/postlist/actions";
 import {Vote} from "../model/objects/Vote";
 import {doAddVote} from "../model/user/actions";
-import {fetchPost, fetchPosts} from "../model/question/postlist/asyncActions";
+import {fetchPosts} from "../model/question/postlist/asyncActions";
 import Answer from "../model/objects/Answer";
+import {dispatchIgnoredAction} from "../model/command/actions";
 
 const NEW_QUESTION_EVENT = "NEW_QUESTION";
 const NEW_VOTE_EVENT = "NEW_VOTE";
@@ -79,14 +80,15 @@ export class WebSocketClient{
             switch (data.type) {
                 case "NEW_VOTE":
                     let newVote = data.payload;
-                    this.dispatch(doAddVote(newVote.postId, newVote.direction));
+                    // Using dispatchIgnoredAction to prevent the action from being added to the command history
+                    this.dispatch(dispatchIgnoredAction(doAddVote(newVote.postId, newVote.direction)));
                     // I know this is not nice, but i dont't want to have a
                     // separate DTO on the backend (just for this case) that includes the score
                     // (this is just reusing VoteDTO) and
                     // a separate reducer that just updates the score
                     // A simpler solution could be to increment/decrement the score here (in the frontend)
                     // and hope for the best, but that doesn't feel right
-                    this.dispatch(fetchPosts(true));
+                    this.dispatch(fetchPosts(true, true));
                     break;
                 case "NEW_QUESTION":
                     let newQuestion = data.payload;
@@ -94,7 +96,8 @@ export class WebSocketClient{
                         ...newQuestion,
                         posted: new Date(newQuestion.posted)
                     };
-                    this.dispatch(doNewPost(newQuestion));
+                    // Using dispatchIgnoredAction to prevent the action from being added to the command history
+                    this.dispatch(dispatchIgnoredAction(doNewPost(newQuestion)));
                     break;
                 case "NEW_ANSWER":
                     let {answer, questionId} = data.payload;
@@ -102,7 +105,8 @@ export class WebSocketClient{
                         ...answer,
                         posted: new Date(answer.posted)
                     };
-                    this.dispatch(doAddAnswer(answer, questionId))
+                    // Using dispatchIgnoredAction to prevent the action from being added to the command history
+                    this.dispatch(dispatchIgnoredAction(doAddAnswer(answer, questionId)))
             }
         })
     }
