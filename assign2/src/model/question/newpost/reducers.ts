@@ -17,7 +17,7 @@ const initialState: NewPostState = {
     newAnswerText: ""
 };
 
-//Splitting this would be nice...
+
 export function newPostReducer(state: NewPostState = initialState, action: NewPostActions): NewPostState{
     switch (action.type){
         case SET_CURRENT_TAG:

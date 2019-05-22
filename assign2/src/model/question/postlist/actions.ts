@@ -44,17 +44,19 @@ export function doEditQuestion(questionId: number, newText: string): EditQuestio
     };
 }
 
-export function doUpdateAnswer(answerId: number): UpdateAnswerAction{
+
+export function doMergeUpdatedAnswer(questionId: number, newData: Answer): UpdateAnswerAction{
     return {
         type: SAVE_UPDATED_ANSWER,
-        answerId: answerId
+        questionId: questionId,
+        data: newData
     };
 }
 
-export function doUpdateQuestion(questionId: number): UpdateQuestionAction{
+export function doMergeUpdatedQuestion(newData: Question): UpdateQuestionAction{
     return {
         type: SAVE_UPDATED_QUESTION,
-        questionId: questionId
+        data: newData
     };
 }
 
