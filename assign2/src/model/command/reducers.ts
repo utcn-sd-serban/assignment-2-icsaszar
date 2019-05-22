@@ -1,14 +1,21 @@
-import {CommandActions, CommandState, DO_ACTION, REDO_ACTION, UNDO_ACTION} from "./types";
+import {CommandActions, CommandState, SAVE_ACTION, REDO_ACTION, UNDO_ACTION, ActionPair} from "./types";
 
 const initialState: CommandState = {
     future: [],
     history: []
 };
 
+function flip(pair: ActionPair): ActionPair{
+    return {
+        antiAction: pair.action,
+        action: pair.antiAction
+    }
+}
+
 export function commandReducer(state: CommandState = initialState, action: CommandActions): CommandState{
-    let hWithoutLast = state.history.slice(0, state.history.length-2);
+    let hWithoutLast = state.history.slice(0, state.history.length-1);
     let hLast = state.history[state.history.length-1];
-    let fWithoutLast = state.future.slice(0, state.history.length-2);
+    let fWithoutLast = state.future.slice(0, state.future.length-1);
     let fLast = state.future[state.future.length-1];
 
     switch (action.type) {
@@ -17,7 +24,7 @@ export function commandReducer(state: CommandState = initialState, action: Comma
                 return {
                     ...state,
                     history: hWithoutLast,
-                    future: [...state.future, hLast]
+                    future: [...state.future, flip(hLast)]
                 };
             else
                 return state;
@@ -25,12 +32,12 @@ export function commandReducer(state: CommandState = initialState, action: Comma
             if(state.future.length > 0){
                 return {
                     ...state,
-                    history: [...state.history, fLast],
+                    history: [...state.history, flip(fLast)],
                     future: fWithoutLast
                 };
             }else
                 return state;
-        case DO_ACTION:
+        case SAVE_ACTION:
             return {
                 ...state,
                 history: [...state.history, action.actionPair],

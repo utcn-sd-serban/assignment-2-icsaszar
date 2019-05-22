@@ -1,7 +1,16 @@
-import {Command, CommandActions, DO_ACTION, REDO_ACTION, UNDO_ACTION, UndoableCommand} from "./types";
+import {
+    Command,
+    CommandActions,
+    SAVE_ACTION,
+    REDO_ACTION,
+    UNDO_ACTION,
+    UndoableCommand,
+    DISPATCH_ACTION,
+    DispatchCommandAction
+} from "./types";
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {AppState} from "../Model";
-import {doAction, undoAction} from "./actions";
+import {dispatchAction, saveAction, undoAction} from "./actions";
 import {getRedoCommand, getUndoCommand} from "./selectors";
 
 function createAntiAction(action: UndoableCommand, state: AppState): UndoableCommand {
@@ -23,19 +32,24 @@ export const commandMiddleware: Middleware =
     switch (action.type) {
         case UNDO_ACTION:
             antiAction = getUndoCommand(initialState);
-            dispatch(antiAction);
+            dispatch(dispatchAction(antiAction));
             break;
         case REDO_ACTION:
             antiAction = getRedoCommand(initialState);
-            dispatch(antiAction);
+            dispatch(dispatchAction(antiAction));
             break;
+        case DISPATCH_ACTION:
+            let command = (action as DispatchCommandAction).action;
+            // Hack to make the command an object so it's not seen as an UndoableCommand
+            // (and added to the history twice)
+            dispatch({...command})
     }
 
     let returnValue = next(action);
     if (isUndoableCommand(action)){ // Check if command is undoable
         //Add it to the command history.
         let antiAction = createAntiAction(action, initialState);
-        dispatch(doAction(action, antiAction));
+        dispatch(saveAction(action, antiAction));
         console.log(`Undoable command ${action.type} added`)
     }
 

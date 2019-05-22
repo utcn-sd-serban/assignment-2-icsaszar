@@ -10,8 +10,9 @@ export function getUndoCommand(state: AppState): UndoableCommand {
 }
 
 export function getRedoCommand(state: AppState): UndoableCommand {
-    if(state.commandState.future.length > 0)
-        return state.commandState.future[0].antiAction;
+    let {future} = state.commandState;
+    if(future.length > 0)
+        return future[future.length - 1].antiAction;
     else
         throw new RangeError()
 }
