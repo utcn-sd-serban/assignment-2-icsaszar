@@ -10,7 +10,7 @@ import {
 } from "./types";
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {AppState} from "../Model";
-import {dispatchAction, saveAction, undoAction} from "./actions";
+import {dispatchIgnoredAction, saveAction, undoAction} from "./actions";
 import {getRedoCommand, getUndoCommand} from "./selectors";
 
 function createAntiAction(action: UndoableCommand, state: AppState): UndoableCommand {
@@ -32,11 +32,11 @@ export const commandMiddleware: Middleware =
     switch (action.type) {
         case UNDO_ACTION:
             antiAction = getUndoCommand(initialState);
-            dispatch(dispatchAction(antiAction));
+            dispatch(dispatchIgnoredAction(antiAction));
             break;
         case REDO_ACTION:
             antiAction = getRedoCommand(initialState);
-            dispatch(dispatchAction(antiAction));
+            dispatch(dispatchIgnoredAction(antiAction));
             break;
         case DISPATCH_ACTION:
             let command = (action as DispatchCommandAction).action;

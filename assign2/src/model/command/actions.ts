@@ -31,7 +31,7 @@ export function saveAction(action: UndoableCommand, antiAction: UndoableCommand)
     }
 }
 
-export function dispatchAction(action: Command): DispatchCommandAction {
+export function dispatchIgnoredAction(action: Command): DispatchCommandAction {
     return {
         type: DISPATCH_ACTION,
         action: action
