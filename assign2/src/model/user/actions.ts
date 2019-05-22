@@ -83,7 +83,7 @@ export function sendVote(postId: number, direction: VoteDirection): ThunkResult<
             if (response.status === 'succeeded') {
                 let data: Vote = await response.data.json();
                 dispatch(doAddVote(data.postId, data.direction));
-                dispatch(fetchPosts(true)) // Update scores
+                dispatch(fetchPosts(true, true)) // Update scores
             }
         }
     }

@@ -12,7 +12,7 @@ interface Props {
 
 export const Header = ({currentUser, onRedo, onUndo, undoPossible, redoPossible}: Props) =>(
     <nav className="navbar navbar-light bg-light navbar-expand">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to="/posts">
             <img src={logo} style={{height:50, background: "transparent"}} className="d-inline-block align-top" alt=""/>
             <span style={{fontSize: 30}}> Heck<b>Overflow</b></span>
         </Link>

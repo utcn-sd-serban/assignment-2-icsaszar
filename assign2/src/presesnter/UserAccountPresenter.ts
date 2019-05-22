@@ -4,8 +4,6 @@ import {
     doDeleteQuestion,
     doEditAnswer,
     doEditQuestion,
-    doMergeUpdatedAnswer,
-    doMergeUpdatedQuestion
 } from "../model/question/postlist/actions";
 import {sendEditedAnswer, sendEditedQuestion} from "../model/question/postlist/asyncActions";
 import {ThunkDispatch} from "redux-thunk";
